@@ -6,8 +6,8 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "fullName": "Peter Njoroge",
-  "email": "njugunahpeternjoroge@gmail.com",
+  "fullName": "Pius mwangi",
+  "email": "pius511@gmail.com",
   "password": "password123",
   "role": "STUDENT"
 }
