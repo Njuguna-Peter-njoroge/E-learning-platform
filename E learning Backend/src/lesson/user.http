@@ -1,0 +1,53 @@
+# Use {{userId}} as a variable in your REST client (e.g., VSCode REST Client or Postman)
+# Example: set userId=123e4567-e89b-12d3-a456-426614174000
+
+### Create a new user
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "fullName": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "password123",
+  "role": "STUDENT"
+}
+
+### Get all users
+GET http://localhost:3000/users
+
+### Get all active users
+GET http://localhost:3000/users/active
+
+### Get all pending users
+GET http://localhost:3000/users/pending
+
+### Get all banned users
+GET http://localhost:3000/users/banned
+
+### Get users by status (query param)
+GET http://localhost:3000/users?status=ACTIVE
+GET http://localhost:3000/users?status=PENDING
+GET http://localhost:3000/users?status=BANNED
+
+### Get user by ID
+GET http://localhost:3000/users/{{userId}}
+
+### Update user
+PATCH http://localhost:3000/users/{{userId}}
+Content-Type: application/json
+
+{
+  "fullName": "Jane Doe",
+  "email": "jane.doe@example.com",
+  "password": "newpassword123",
+  "role": "INSTRUCTOR"
+}
+
+### Ban user
+DELETE http://localhost:3000/users/{{userId}}
+
+### Set user status to pending
+PATCH http://localhost:3000/users/{{userId}}/status/pending
+
+### Reactivate user
+PATCH http://localhost:3000/users/{{userId}}/status/active 
