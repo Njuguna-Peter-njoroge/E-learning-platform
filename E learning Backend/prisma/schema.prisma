@@ -41,6 +41,7 @@ enum AccountStatus {
 
 model Course {
   id           String       @id @default(uuid())
+  iconImage    String      @default("course_image_icon.png")
   title        String
   description  String
   level        Difficulty
