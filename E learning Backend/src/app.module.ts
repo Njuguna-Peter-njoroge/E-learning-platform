@@ -14,9 +14,10 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { CertificatesModule } from './certificates/certificates.module';
 import { LessonModule } from './lesson/lesson.module';
 import { UserModule } from './user/user.module';
+import { QuestionModule } from './question/question.module';
 
 @Module({
-  imports: [AuthModule,  CourseModule, ContentModule, EnrollmentModule, ProgressModule, QuizModule, ReviewModule, AdminModule, AnalyticsModule, CertificatesModule, LessonModule, UserModule],
+  imports: [AuthModule,  CourseModule, ContentModule, EnrollmentModule, ProgressModule, QuizModule, ReviewModule, AdminModule, AnalyticsModule, CertificatesModule, LessonModule, UserModule, QuestionModule],
   controllers: [AppController],
   providers: [AppService],
 })
