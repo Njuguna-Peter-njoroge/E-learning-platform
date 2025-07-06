@@ -55,6 +55,17 @@ export class AuthController {
     );
   }
 
+  // Development helper endpoints (for testing purposes)
+  @Post('dev/verify-email')
+  @HttpCode(HttpStatus.OK)
+  async manuallyVerifyEmail(@Body() body: { email: string }) {
+    return this.authService.manuallyVerifyEmail(body.email);
+  }
 
+  @Post('dev/reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPasswordManually(@Body() body: { email: string; newPassword: string }) {
+    return this.authService.resetPasswordManually(body.email, body.newPassword);
+  }
 }
 

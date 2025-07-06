@@ -44,4 +44,10 @@ export class EnrollmentController {
   remove(@Param('id') id: string) {
     return this.enrollmentService.remove(id);
   }
+
+  // Development helper endpoint to enroll student by email
+  @Post('dev/enroll-by-email')
+  async enrollStudentByEmail(@Body() body: { email: string; courseId: string }) {
+    return this.enrollmentService.enrollStudentByEmail(body.email, body.courseId);
+  }
 }
