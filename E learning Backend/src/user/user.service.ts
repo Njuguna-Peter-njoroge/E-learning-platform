@@ -8,11 +8,12 @@ import {
 import {PrismaService} from "../prisma/prisma.service";
 import {UserResponseDto} from "./Dtos/userResponse.dto";
 import {ApiResponse} from "../Shared/apiresponse";
-import { createuserDto } from './Dtos/createuser.dto'; 
+import { CreateUserDto } from './Dtos/createuser.dto'; 
 import * as bcrypt from 'bcrypt';
 import {PrismaClientKnownRequestError} from "@prisma/client/runtime/edge";
 import {Role, AccountStatus} from "@prisma/client";
-import { updateUserDto } from './Dtos/updateuser.dto'; 
+import { UpdateUserDto } from './Dtos/updateuser.dto'; 
+import { UserFiltersDto } from './Dtos/user-filters.dto';
 
 @Injectable()
 export class UserService {
@@ -20,14 +21,33 @@ export class UserService {
     }
 
     private sanitizeUser(user): UserResponseDto {
-        const {password, ...rest} = user;
+        const {password, verificationToken, ...rest} = user;
         return rest as UserResponseDto;
     }
 
-    async create(data: createuserDto): Promise<ApiResponse<UserResponseDto>> {
+    async create(data: CreateUserDto): Promise<ApiResponse<UserResponseDto>> {
         const hashedPassword = await bcrypt.hash(data.password, 12);
 
         try {
+            // Check if user already exists
+            const existingUser = await this.prisma.user.findUnique({
+                where: { email: data.email.toLowerCase() }
+            });
+
+            if (existingUser) {
+                throw new ConflictException('Email already exists');
+            }
+
+            // Set verification status based on role
+            const isVerified = data.role === Role.ADMIN ? true : false;
+            
+            // Generate OTP for non-admin users
+            let verificationToken = null;
+            if (data.role !== Role.ADMIN) {
+                const { randomInt } = require('crypto');
+                verificationToken = randomInt(100000, 999999).toString();
+            }
+
             const user = await this.prisma.user.create({
                 data: {
                     fullName: data.fullName,
@@ -35,9 +55,10 @@ export class UserService {
                     password: hashedPassword,
                     role: data.role || Role.STUDENT,
                     status: AccountStatus.ACTIVE,
+                    isVerified,
+                    verificationToken,
                 },
             });
-
 
             return {
                 success: true,
@@ -54,7 +75,6 @@ export class UserService {
             throw new InternalServerErrorException('An unexpected error occurred');
         }
     }
-
 
     async findAll(): Promise<ApiResponse<UserResponseDto[]>> {
         const users = await this.prisma.user.findMany({
@@ -105,7 +125,7 @@ export class UserService {
 
     async update(
         id: string,
-        data: updateUserDto,
+        data: UpdateUserDto,
     ): Promise<ApiResponse<UserResponseDto>> {
         if (!id) throw new BadRequestException('User ID is required');
 
@@ -229,14 +249,20 @@ export class UserService {
     }
 
     async banUser(id: string): Promise<ApiResponse<UserResponseDto>> {
-        const user = await this.prisma.user.update({
+        if (!id) throw new BadRequestException('User ID is required');
+
+        const user = await this.prisma.user.findUnique({ where: { id } });
+        if (!user) throw new NotFoundException('User not found');
+
+        const updatedUser = await this.prisma.user.update({
             where: { id },
             data: { status: AccountStatus.BANNED },
         });
+
         return {
             success: true,
             message: 'User banned successfully',
-            data: this.sanitizeUser(user),
+            data: this.sanitizeUser(updatedUser),
         };
     }
 
@@ -245,22 +271,151 @@ export class UserService {
             where: { status },
             orderBy: { createdAt: 'desc' },
         });
+
         return {
             success: true,
             message: `Users with status ${status} retrieved successfully`,
-            data: users.map(this.sanitizeUser),
+            data: users.map((user) => this.sanitizeUser(user)),
         };
     }
 
     async setStatus(id: string, status: AccountStatus): Promise<ApiResponse<any>> {
-        const user = await this.prisma.user.update({
+        if (!id) throw new BadRequestException('User ID is required');
+
+        const user = await this.prisma.user.findUnique({ where: { id } });
+        if (!user) throw new NotFoundException('User not found');
+
+        const updatedUser = await this.prisma.user.update({
             where: { id },
             data: { status },
         });
+
         return {
             success: true,
-            message: `User status set to ${status}`,
-            data: this.sanitizeUser(user),
+            message: `User status updated to ${status} successfully`,
+            data: this.sanitizeUser(updatedUser),
         };
     }
+
+    async findWithFilters(filters: UserFiltersDto): Promise<ApiResponse<UserResponseDto[]>> {
+        const where: any = {};
+
+        if (filters.status) where.status = filters.status;
+        if (filters.role) where.role = filters.role;
+        if (filters.isVerified !== undefined) where.isVerified = filters.isVerified;
+        if (filters.search) {
+            where.OR = [
+                { fullName: { contains: filters.search, mode: 'insensitive' } },
+                { email: { contains: filters.search, mode: 'insensitive' } },
+            ];
+        }
+
+        const users = await this.prisma.user.findMany({
+            where,
+            orderBy: { createdAt: 'desc' },
+        });
+
+        return {
+            success: true,
+            message: 'Users retrieved successfully',
+            data: users.map((user) => this.sanitizeUser(user)),
+        };
+    }
+
+    async findWithPagination(page: number, limit: number): Promise<any> {
+        const skip = (page - 1) * limit;
+        
+        const [users, total] = await Promise.all([
+            this.prisma.user.findMany({
+                where: { status: AccountStatus.ACTIVE },
+                skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.prisma.user.count({
+                where: { status: AccountStatus.ACTIVE },
+            }),
+        ]);
+
+        const totalPages = Math.ceil(total / limit);
+
+        return {
+            success: true,
+            message: 'Users retrieved successfully',
+            data: users.map((user) => this.sanitizeUser(user)),
+            pagination: {
+                page,
+                limit,
+                total,
+                totalPages,
+            },
+        };
+    }
+
+    async getUserStats(): Promise<any> {
+        const [
+            totalUsers,
+            activeUsers,
+            pendingUsers,
+            bannedUsers,
+            verifiedUsers,
+            unverifiedUsers,
+            usersByRole,
+        ] = await Promise.all([
+            this.prisma.user.count(),
+            this.prisma.user.count({ where: { status: AccountStatus.ACTIVE } }),
+            this.prisma.user.count({ where: { status: AccountStatus.PENDING } }),
+            this.prisma.user.count({ where: { status: AccountStatus.BANNED } }),
+            this.prisma.user.count({ where: { isVerified: true } }),
+            this.prisma.user.count({ where: { isVerified: false } }),
+            this.prisma.user.groupBy({
+                by: ['role'],
+                _count: { role: true },
+            }),
+        ]);
+
+        const roleStats = {
+            ADMIN: 0,
+            INSTRUCTOR: 0,
+            STUDENT: 0,
+        };
+
+        usersByRole.forEach((item) => {
+            roleStats[item.role] = item._count.role;
+        });
+
+        return {
+            success: true,
+            message: 'User statistics retrieved successfully',
+            data: {
+                totalUsers,
+                activeUsers,
+                pendingUsers,
+                bannedUsers,
+                verifiedUsers,
+                unverifiedUsers,
+                usersByRole: roleStats,
+            },
+        };
+    }
+
+    async bulkUpdateStatus(ids: string[], status: AccountStatus): Promise<{ message: string }> {
+        await this.prisma.user.updateMany({
+            where: { id: { in: ids } },
+            data: { status },
+        });
+
+        return { message: `${ids.length} users updated to ${status} status` };
+    }
+
+    async bulkDelete(ids: string[]): Promise<{ message: string }> {
+        await this.prisma.user.updateMany({
+            where: { id: { in: ids } },
+            data: { status: AccountStatus.BANNED },
+        });
+
+        return { message: `${ids.length} users deleted successfully` };
+    }
+
+
 }

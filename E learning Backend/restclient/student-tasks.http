@@ -1,0 +1,194 @@
+# Student Task Management API Tests
+# These endpoints are specifically for student task management
+
+# ========================================
+# AUTHENTICATION
+# ========================================
+
+### Login as a student to get a token
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "student123"
+}
+
+### Store the student token from the login response above
+# Replace STUDENT_JWT_TOKEN with the actual token from login response
+# Current token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+# ========================================
+# STUDENT PROGRESS & TASKS
+# ========================================
+
+### Get student's available tasks (requires STUDENT role)
+GET http://localhost:3000/progress/student/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYzc2NDI3NS1lN2YxLTRiYzYtOWM5ZC0yMDYxYzEzM2VkMzUiLCJlbWFpbCI6InN0dWRlbnRAZXhhbXBsZS5jb20iLCJyb2xlIjoiU1RVREVOVCIsImlhdCI6MTc1MTgyNzcwNSwiZXhwIjoxNzUxOTE0MTA1fQ.FPY6tVP14brcmA-zdO6XODXgeLhtW4HmAONSV0i9Ph8
+
+### Get student's progress overview (requires STUDENT role) - Shows completed tasks summary
+GET http://localhost:3000/progress/student/progress
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+### Get detailed student tasks with progress status (requires STUDENT role) - Shows all tasks and their completion status
+GET http://localhost:3000/progress/student/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+### Get current user profile (to get user ID)
+GET http://localhost:3000/users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+# ========================================
+# LESSON MANAGEMENT (VIEW ONLY FOR STUDENTS)
+# ========================================
+
+### View all lessons (students can view but not create)
+GET http://localhost:3000/lessons
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+### View specific lesson (replace LESSON_ID_HERE with actual lesson ID)
+GET http://localhost:3000/lessons/59f4743d-dfcc-49ad-82f4-25920ad36b62
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+# ========================================
+# TASK COMPLETION (AFTER GETTING LESSON IDS)
+# ========================================
+### get enrollment
+POST http://localhost:3000/enrollments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+Content-Type: application/json
+
+{
+  "courseId": "6d13ae67-625a-4aeb-a63e-58c0a95805e6",
+  "status": "ENROLLED"
+}
+### Start a specific task (replace LESSON_ID_HERE with actual lesson ID)
+POST http://localhost:3000/progress/student/tasks/59f4743d-dfcc-49ad-82f4-25920ad36b62/start
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+### Complete a task with grade (replace LESSON_ID_HERE with actual lesson ID)
+POST http://localhost:3000/progress/student/tasks/59f4743d-dfcc-49ad-82f4-25920ad36b62/complete
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+Content-Type: application/json
+
+{
+  "grade": 85
+}
+
+### Complete a task without grade (optional)
+POST http://localhost:3000/progress/student/tasks/506260e1-7d6e-4e11-a4e7-9ad89ce5e013/complete
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+Content-Type: application/json
+
+{}
+
+
+###  CERTIFICATES
+
+### Get student's certificates (replace STUDENT_ID_HERE with actual user ID)
+GET http://localhost:3000/certificates/user/6e7a7e60-0bc9-41cd-bd4b-d7d62a996e46
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+# ========================================
+# ERROR TESTS (STUDENT PERMISSIONS)
+# ========================================
+
+### Test student trying to create a lesson (should fail - 403)
+POST http://localhost:3000/lessons
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+Content-Type: application/json
+
+{
+  "title": "Test Lesson",
+  "content": "This should fail for students",
+  "moduleId": "module-id-here",
+  "order": 1
+}
+
+### Test student trying to update a lesson (should fail - 403)
+PATCH http://localhost:3000/lessons/LESSON_ID_HERE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+Content-Type: application/json
+
+{
+  "title": "Updated Lesson"
+}
+
+### Test student trying to delete a lesson (should fail - 403)
+DELETE http://localhost:3000/lessons/LESSON_ID_HERE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+# ========================================
+# ERROR TESTS (AUTHENTICATION)
+# ========================================
+
+### Test starting a task without authentication (should fail - 401)
+POST http://localhost:3000/progress/student/tasks/LESSON_ID_HERE/start
+
+### Test completing a task without authentication (should fail - 401)
+POST http://localhost:3000/progress/student/tasks/LESSON_ID_HERE/complete
+Content-Type: application/json
+
+{
+  "grade": 90
+}
+
+### Test with invalid token (should fail - 401)
+GET http://localhost:3000/progress/student/tasks
+Authorization: Bearer 506260e1-7d6e-4e11-a4e7-9ad89ce5e013
+
+# ========================================
+# ERROR TESTS (BUSINESS LOGIC)
+# ========================================
+
+### Test starting multiple tasks simultaneously (should fail - 400)
+# Start first task
+POST http://localhost:3000/progress/student/tasks/59f4743d-dfcc-49ad-82f4-25920ad36b62/start
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+### Try to start second task while first is in progress (should fail)
+POST http://localhost:3000/progress/student/tasks/f1a4ebd2-3ccb-444f-bbbf-fa53e379803a/start
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+### Test starting a task without completing prerequisites (should fail - 400)
+POST http://localhost:3000/progress/student/tasks/f1a4ebd2-3ccb-444f-bbbf-fa53e379803a/start
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+### Test completing a task that's already completed (should fail - 400)
+POST http://localhost:3000/progress/student/tasks/780ecae1-f3f4-404d-8b73-d3ab23fcaec9/complete
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+Content-Type: application/json
+
+{
+  "grade": 95
+}
+
+### Test completing a task that hasn't been started (should fail - 404)
+POST http://localhost:3000/progress/student/tasks/NEW_LESSON_ID/complete
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+Content-Type: application/json
+
+{
+  "grade": 80
+}
+
+# ========================================
+# INSTRUCTOR & ADMIN ACCESS TESTS
+# ========================================
+
+### Test instructor access to student progress (replace with instructor token)
+GET http://localhost:3000/progress/user/6e7a7e60-0bc9-41cd-bd4b-d7d62a996e46
+Authorization: Bearer INSTRUCTOR_JWT_TOKEN
+
+### Test admin access to all progress (replace with admin token)
+GET http://localhost:3000/progress
+Authorization: Bearer ADMIN_JWT_TOKEN
+
+# ========================================
+# USEFUL INFORMATION
+# ========================================
+
+# Current Student Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+# Student User ID: 6e7a7e60-0bc9-41cd-bd4b-d7d62a996e46
+# Student Email: john23@example.com
+# Student Role: STUDENT 

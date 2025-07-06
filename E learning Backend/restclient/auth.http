@@ -1,0 +1,286 @@
+# Authentication API Tests
+# Use these endpoints to test the authentication system
+
+# Global variables for storing tokens and user data
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+# ========================================
+# USER REGISTRATION TESTS
+# ========================================
+
+### Register a new student user
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "fullName": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+
+### Register an instructor user
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "fullName": "Jane Smith",
+  "email": "jane.smith@example.com",
+  "password": "password123"
+}
+
+### Register an admin user (using user creation endpoint)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "fullName": "Admin User",
+  "email": "admin@example.com",
+  "password": "admin123",
+  "role": "ADMIN"
+}
+
+# ========================================
+# EMAIL VERIFICATION TESTS
+# ========================================
+
+### Verify email with OTP (replace with actual OTP from email)
+POST {{baseUrl}}/auth/verify-email
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com",
+  "token": "123456"
+}
+
+### Resend verification email
+POST {{baseUrl}}/auth/resend-verification
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com"
+}
+
+# ========================================
+# LOGIN TESTS
+# ========================================
+
+### Login with unverified email (should fail for students)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+
+### Login with admin (should succeed without verification)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "newadmin@gmail.com",
+  "password": "password123"
+}
+
+> {%
+client.global.set("adminToken", response.body.access_token);
+client.global.set("adminUserId", response.body.user.id);
+%}
+
+### Login after email verification (should succeed)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+
+> {%
+client.global.set("studentToken", response.body.access_token);
+client.global.set("studentUserId", response.body.user.id);
+%}
+
+### Login with instructor
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "instructor",
+  "password": "instructor123"
+}
+
+> {%
+client.global.set("instructorToken", response.body.access_token);
+client.global.set("instructorUserId", response.body.user.id);
+%}
+
+# ========================================
+# PASSWORD RESET TESTS
+# ========================================
+
+### Forgot password
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com"
+}
+
+### Reset password with OTP (replace with actual OTP from email)
+POST {{baseUrl}}/auth/reset-password
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com",
+  "token": "123456",
+  "newPassword": "newpassword123"
+}
+
+### Login with new password
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com",
+  "password": "newpassword123"
+}
+
+> {%
+client.global.set("updatedStudentToken", response.body.access_token);
+%}
+
+# ========================================
+# ERROR TESTS
+# ========================================
+
+### Test invalid login credentials
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "nonexistent@example.com",
+  "password": "wrongpassword"
+}
+
+### Test login with wrong password
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com",
+  "password": "wrongpassword"
+}
+
+# ========================================
+# AUTHENTICATED REQUESTS TESTS
+# ========================================
+
+### Get current user profile (with admin token)
+GET {{baseUrl}}/users/profile
+Authorization: Bearer {{adminToken}}
+Content-Type: {{contentType}}
+
+### Get current user profile (with student token)
+GET {{baseUrl}}/users/profile
+Authorization: Bearer {{studentToken}}
+Content-Type: {{contentType}}
+
+### Get current user profile (with instructor token)
+GET {{baseUrl}}/users/profile
+Authorization: Bearer {{instructorToken}}
+Content-Type: {{contentType}}
+
+### Get all users (admin only)
+GET {{baseUrl}}/users
+Authorization: Bearer {{adminToken}}
+Content-Type: {{contentType}}
+
+### Try to get all users with student token (should fail)
+GET {{baseUrl}}/users
+Authorization: Bearer {{studentToken}}
+Content-Type: {{contentType}}
+
+### Change password (authenticated)
+POST {{baseUrl}}/auth/change-password
+Authorization: Bearer {{adminToken}}
+Content-Type: {{contentType}}
+
+{
+  "currentPassword": "admin123",
+  "newPassword": "newadmin123"
+}
+
+### Login with new admin password
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "newadmin123"
+}
+
+> {%
+client.global.set("updatedAdminToken", response.body.access_token);
+%}
+
+# ========================================
+# TOKEN VALIDATION TESTS
+# ========================================
+
+### Test with invalid token
+GET {{baseUrl}}/users/profile
+Authorization: Bearer invalid_token_here
+Content-Type: {{contentType}}
+
+### Test without token
+GET {{baseUrl}}/users/profile
+Content-Type: {{contentType}}
+
+# ========================================
+# USER MANAGEMENT TESTS (Admin Only)
+# ========================================
+
+### Create a new user (admin only)
+POST {{baseUrl}}/users
+Authorization: Bearer {{adminToken}}
+Content-Type: {{contentType}}
+
+{
+  "fullName": "Test User",
+  "email": "test.user@example.com",
+  "password": "test123",
+  "role": "STUDENT"
+}
+
+### Update user (admin only)
+PUT {{baseUrl}}/users/{{studentUserId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: {{contentType}}
+
+{
+  "fullName": "John Doe Updated",
+  "email": "john.doe@example.com"
+}
+
+### Get user by ID (admin only)
+GET {{baseUrl}}/users/{{studentUserId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: {{contentType}}
+
+### Delete user (admin only)
+DELETE {{baseUrl}}/users/{{studentUserId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: {{contentType}}
+
+# ========================================
+# TOKEN SUMMARY
+# ========================================
+
+### Display stored tokens (for reference)
+# Admin Token: {{adminToken}}
+# Student Token: {{studentToken}}
+# Instructor Token: {{instructorToken}}
+# Updated Admin Token: {{updatedAdminToken}}
+# Updated Student Token: {{updatedStudentToken}} 

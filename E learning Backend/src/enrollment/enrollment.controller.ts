@@ -6,18 +6,23 @@ import {
   Param,
   Delete,
   Patch,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { EnrollmentService } from './enrollment.service';
 import { CreateEnrollmentDto } from './dtos/create-enrollment.dto'; 
 import { UpdateEnrollmentDto } from './dtos/update-enrollment.dto'; 
+import { JwtAuthGuard } from '../auth/Guards/auth.guards';
 
 @Controller('enrollments')
 export class EnrollmentController {
   constructor(private readonly enrollmentService: EnrollmentService) {}
 
   @Post()
-  create(@Body() dto: CreateEnrollmentDto) {
-    return this.enrollmentService.create(dto);
+  @UseGuards(JwtAuthGuard)
+  create(@Body() dto: CreateEnrollmentDto, @Request() req) {
+    const userId = req.user.id;
+    return this.enrollmentService.create(dto, userId);
   }
 
   @Get()

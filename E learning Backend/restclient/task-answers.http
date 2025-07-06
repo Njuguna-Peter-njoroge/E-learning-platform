@@ -1,0 +1,175 @@
+### Task Answers API Testing
+
+### 1. Instructor/Admin Operations
+
+# Create a task answer (Instructor/Admin only)
+POST http://localhost:3000/task-answers
+Authorization: Bearer {{instructor_token}}
+Content-Type: application/json
+
+{
+  "lessonId": "lesson-uuid-here",
+  "question": "What is the capital of France?",
+  "correctAnswer": "Paris",
+  "points": 5
+}
+
+###
+
+# Get all task answers (Instructor/Admin only)
+GET http://localhost:3000/task-answers
+Authorization: Bearer {{instructor_token}}
+
+###
+
+# Get task answers by lesson (Instructor/Admin only)
+GET http://localhost:3000/task-answers/lesson/lesson-uuid-here
+Authorization: Bearer {{instructor_token}}
+
+###
+
+# Get specific task answer (Instructor/Admin only)
+GET http://localhost:3000/task-answers/task-answer-uuid-here
+Authorization: Bearer {{instructor_token}}
+
+###
+
+# Update task answer (Instructor/Admin only)
+PATCH http://localhost:3000/task-answers/task-answer-uuid-here
+Authorization: Bearer {{instructor_token}}
+Content-Type: application/json
+
+{
+  "correctAnswer": "Paris, France",
+  "points": 10
+}
+
+###
+
+# Delete task answer (Instructor/Admin only)
+DELETE http://localhost:3000/task-answers/task-answer-uuid-here
+Authorization: Bearer {{instructor_token}}
+
+###
+
+### 2. Student Operations
+
+# Submit task answer (Student only)
+POST http://localhost:3000/task-answers/submit
+Authorization: Bearer {{student_token}}
+Content-Type: application/json
+
+{
+  "taskAnswerId": "task-answer-uuid-here",
+  "studentAnswer": "Paris"
+}
+
+###
+
+# Get student performance (Student only)
+GET http://localhost:3000/task-answers/student/performance
+Authorization: Bearer {{student_token}}
+
+###
+
+# Get student performance by lesson (Student only)
+GET http://localhost:3000/task-answers/student/performance/lesson-uuid-here
+Authorization: Bearer {{student_token}}
+
+###
+
+### 3. Instructor Analytics
+
+# Get all student submissions for a lesson (Instructor/Admin only)
+GET http://localhost:3000/task-answers/analytics/lesson/lesson-uuid-here/submissions
+Authorization: Bearer {{instructor_token}}
+
+###
+
+# Get failed questions for a lesson (Instructor/Admin only)
+GET http://localhost:3000/task-answers/analytics/lesson/lesson-uuid-here/failed-questions
+Authorization: Bearer {{instructor_token}}
+
+###
+
+# Get comprehensive lesson analytics (Instructor/Admin only)
+GET http://localhost:3000/task-answers/analytics/lesson/lesson-uuid-here
+Authorization: Bearer {{instructor_token}}
+
+###
+
+# Get specific student performance (Instructor/Admin only)
+GET http://localhost:3000/task-answers/analytics/student/student-uuid-here
+Authorization: Bearer {{instructor_token}}
+
+###
+
+# Get specific student performance by lesson (Instructor/Admin only)
+GET http://localhost:3000/task-answers/analytics/student/student-uuid-here/lesson/lesson-uuid-here
+Authorization: Bearer {{instructor_token}}
+
+###
+
+### Example Workflow:
+
+# 1. Instructor creates task answers
+POST http://localhost:3000/task-answers
+Authorization: Bearer {{instructor_token}}
+Content-Type: application/json
+
+{
+  "lessonId": "lesson-1",
+  "question": "What is 2 + 2?",
+  "correctAnswer": "4",
+  "points": 5
+}
+
+###
+
+POST http://localhost:3000/task-answers
+Authorization: Bearer {{instructor_token}}
+Content-Type: application/json
+
+{
+  "lessonId": "lesson-1",
+  "question": "What is the square root of 16?",
+  "correctAnswer": "4",
+  "points": 10
+}
+
+###
+
+# 2. Student submits answers
+POST http://localhost:3000/task-answers/submit
+Authorization: Bearer {{student_token}}
+Content-Type: application/json
+
+{
+  "taskAnswerId": "task-answer-1",
+  "studentAnswer": "4"
+}
+
+###
+
+POST http://localhost:3000/task-answers/submit
+Authorization: Bearer {{student_token}}
+Content-Type: application/json
+
+{
+  "taskAnswerId": "task-answer-2",
+  "studentAnswer": "5"
+}
+
+###
+
+# 3. Instructor checks analytics
+GET http://localhost:3000/task-answers/analytics/lesson/lesson-1
+Authorization: Bearer {{instructor_token}}
+
+###
+
+# 4. Instructor sees failed questions
+GET http://localhost:3000/task-answers/analytics/lesson/lesson-1/failed-questions
+Authorization: Bearer {{instructor_token}}
+
+### 
