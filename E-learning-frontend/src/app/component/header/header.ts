@@ -15,7 +15,7 @@ import { RouterLink } from '@angular/router';
         <button class="p-5" routerLink="">DashBoard </button>
         <button class="p-5" routerLink="">Contact Us</button>
         <button class="p-5" routerLink="">About Us</button>
-        <button class="pl-20 p-5" routerLink="">Login</button>
+        <button class="pl-20 p-5" routerLink="/login">Login</button>
       </div>
       
     </div>
