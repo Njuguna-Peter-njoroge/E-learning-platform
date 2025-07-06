@@ -1,0 +1,254 @@
+# Lesson Creation API Tests
+# This file shows how to create courses, modules, and lessons
+
+# ========================================
+# AUTHENTICATION
+# ========================================
+
+### Login as Admin
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "newadmin@gmail.com",
+  "password": "password123"
+}
+
+### Login as Instructor
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "john23@example.com",
+  "password": "password123"
+}
+
+### COURSE CREATION (ADMIN/INSTRUCTOR)
+
+### Create a new course
+POST http://localhost:3000/courses
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTQ4ZDE0Mi0yNjA0LTQ0YWQtODUzMS01NDllMzFmYmY4NDAiLCJlbWFpbCI6Imluc3RydWN0b3IiLCJyb2xlIjoiSU5TVFJVQ1RPUiIsImlhdCI6MTc1MTgxMjEyNSwiZXhwIjoxNzUxODk4NTI1fQ.cH1hWLUK8I-XCaVA3r6AriGj0qnzgntp7IBCXem7E0A
+Content-Type: application/json
+
+{
+  "title": "Web Development Fundamentals",
+  "description": "Learn the basics of web development including HTML, CSS, and JavaScript",
+  "level": "BEGINNER",
+  "category": "Programming",
+  "status": "PUBLISHED",
+  "instructorId": "f148d142-2604-44ad-8531-549e31fbf840"
+}
+
+### Create another course
+POST http://localhost:3000/courses
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTQ4ZDE0Mi0yNjA0LTQ0YWQtODUzMS01NDllMzFmYmY4NDAiLCJlbWFpbCI6Imluc3RydWN0b3IiLCJyb2xlIjoiSU5TVFJVQ1RPUiIsImlhdCI6MTc1MTgxMjEyNSwiZXhwIjoxNzUxODk4NTI1fQ.cH1hWLUK8I-XCaVA3r6AriGj0qnzgntp7IBCXem7E0A
+Content-Type: application/json
+
+{
+  "title": "Advanced JavaScript",
+  "description": "Master advanced JavaScript concepts and modern ES6+ features",
+  "level": "ADVANCED",
+  "category": "Programming",
+  "status": "PUBLISHED",
+  "instructorId": "f148d142-2604-44ad-8531-549e31fbf840"
+}
+
+### Get all courses
+GET http://localhost:3000/courses
+Authorization: Bearer ADMIN_TOKEN_HERE
+
+# ========================================
+# MODULE CREATION (ADMIN/INSTRUCTOR)
+# ========================================
+
+### Create a module for HTML basics
+POST http://localhost:3000/modules
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTI5M2QwMC05ZjI0LTRjZmUtYWU0MC0xZDA0NjA1MjNjN2IiLCJlbWFpbCI6Im5ld2FkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1MTgxMzUyNywiZXhwIjoxNzUxODk5OTI3fQ.8cHCb3oIYPUNE-FtYAAtfJu7wTqTLLEBefQgVIYsiPE
+Content-Type: application/json
+
+{
+  "title": "HTML Fundamentals",
+  "courseId": "6d13ae67-625a-4aeb-a63e-58c0a95805e6"
+}
+
+### Create a module for CSS basics
+POST http://localhost:3000/modules
+Authorization: Bearer ADMIN_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "title": "CSS Styling",
+  "courseId": "6d13ae67-625a-4aeb-a63e-58c0a95805e6"
+}
+
+### Create a module for JavaScript basics
+POST http://localhost:3000/modules
+Authorization: Bearer ADMIN_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "title": "JavaScript Programming",
+  "courseId": "6d13ae67-625a-4aeb-a63e-58c0a95805e6"
+}
+
+### Get all modules for a course
+GET http://localhost:3000/modules/course/6d13ae67-625a-4aeb-a63e-58c0a95805e6
+Authorization: Bearer ADMIN_TOKEN_HERE
+
+# ========================================
+# LESSON CREATION (INSTRUCTOR/ADMIN)
+# ========================================
+
+### Create first lesson - HTML Introduction
+POST http://localhost:3000/lessons
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTI5M2QwMC05ZjI0LTRjZmUtYWU0MC0xZDA0NjA1MjNjN2IiLCJlbWFpbCI6Im5ld2FkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1MTgxMzk4MSwiZXhwIjoxNzUxOTAwMzgxfQ.8L5HuP5Tjkt3bDIIvo2FADM1Xoh4AzxUXiUlRJcAmoY
+Content-Type: application/json
+
+{
+  "title": "Introduction to HTML",
+  "content": "HTML (HyperText Markup Language) is the standard markup language for creating web pages. In this lesson, you'll learn the basic structure of HTML documents, common tags, and how to create your first web page.",
+  "moduleId": "e7d1bd06-1a34-49f0-abb0-621212f52124",
+  "order": 1
+}
+
+### Create second lesson - HTML Elements
+POST http://localhost:3000/lessons
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTI5M2QwMC05ZjI0LTRjZmUtYWU0MC0xZDA0NjA1MjNjN2IiLCJlbWFpbCI6Im5ld2FkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1MTgxMzk4MSwiZXhwIjoxNzUxOTAwMzgxfQ.8L5HuP5Tjkt3bDIIvo2FADM1Xoh4AzxUXiUlRJcAmoY
+Content-Type: application/json
+
+{
+  "title": "HTML Elements and Tags",
+  "content": "Learn about different HTML elements like headings, paragraphs, lists, links, and images. Understand the difference between block-level and inline elements.",
+  "moduleId": "e7d1bd06-1a34-49f0-abb0-621212f52124",
+  "order": 2
+}
+
+### Create third lesson - HTML Forms
+POST http://localhost:3000/lessons
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTI5M2QwMC05ZjI0LTRjZmUtYWU0MC0xZDA0NjA1MjNjN2IiLCJlbWFpbCI6Im5ld2FkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1MTgxMzk4MSwiZXhwIjoxNzUxOTAwMzgxfQ.8L5HuP5Tjkt3bDIIvo2FADM1Xoh4AzxUXiUlRJcAmoY
+Content-Type: application/json
+
+{
+  "title": "HTML Forms and Input",
+  "content": "Learn how to create forms in HTML, including different input types, form validation, and best practices for user-friendly forms.",
+  "moduleId": "e7d1bd06-1a34-49f0-abb0-621212f52124",
+  "order": 3
+}
+
+### Create CSS lesson - Introduction to CSS
+POST http://localhost:3000/lessons
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTI5M2QwMC05ZjI0LTRjZmUtYWU0MC0xZDA0NjA1MjNjN2IiLCJlbWFpbCI6Im5ld2FkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1MTgxMzk4MSwiZXhwIjoxNzUxOTAwMzgxfQ.8L5HuP5Tjkt3bDIIvo2FADM1Xoh4AzxUXiUlRJcAmoY
+Content-Type: application/json
+
+{
+  "title": "Introduction to CSS",
+  "content": "CSS (Cascading Style Sheets) is used to style and layout web pages. Learn about selectors, properties, and how to apply styles to HTML elements.",
+  "moduleId": "ebe2bf97-8e70-45ab-8e68-c95aaa111fdd",
+  "order": 1
+}
+
+### Create JavaScript lesson - Variables and Data Types
+POST http://localhost:3000/lessons
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTI5M2QwMC05ZjI0LTRjZmUtYWU0MC0xZDA0NjA1MjNjN2IiLCJlbWFpbCI6Im5ld2FkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1MTgxMzk4MSwiZXhwIjoxNzUxOTAwMzgxfQ.8L5HuP5Tjkt3bDIIvo2FADM1Xoh4AzxUXiUlRJcAmoY
+Content-Type: application/json
+
+{
+  "title": "JavaScript Variables and Data Types",
+  "content": "Learn about JavaScript variables, data types (strings, numbers, booleans, objects, arrays), and how to declare and use variables effectively.",
+  "moduleId": "fee6d475-ab38-4109-9670-d1327b69bbce",
+  "order": 1
+}
+
+
+### LESSON MANAGEMENT
+
+### Get all lessons
+GET http://localhost:3000/lessons
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTI5M2QwMC05ZjI0LTRjZmUtYWU0MC0xZDA0NjA1MjNjN2IiLCJlbWFpbCI6Im5ld2FkbWluQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc1MTgxMzk4MSwiZXhwIjoxNzUxOTAwMzgxfQ.8L5HuP5Tjkt3bDIIvo2FADM1Xoh4AzxUXiUlRJcAmoY
+
+### Get lessons by module
+GET http://localhost:3000/lessons/module/ebe2bf97-8e70-45ab-8e68-c95aaa111fdd
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTQ4ZDE0Mi0yNjA0LTQ0YWQtODUzMS01NDllMzFmYmY4NDAiLCJlbWFpbCI6Imluc3RydWN0b3IiLCJyb2xlIjoiSU5TVFJVQ1RPUiIsImlhdCI6MTc1MTgxNzg0NywiZXhwIjoxNzUxOTA0MjQ3fQ.ZikvEPc2GsQwRYof7CHLdHxWxLfmTGuTUW6d3mSol7M
+
+### Get specific lesson
+GET http://localhost:3000/lessons/836161d9-3e69-4121-a5aa-e0adb641c5f0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTQ4ZDE0Mi0yNjA0LTQ0YWQtODUzMS01NDllMzFmYmY4NDAiLCJlbWFpbCI6Imluc3RydWN0b3IiLCJyb2xlIjoiSU5TVFJVQ1RPUiIsImlhdCI6MTc1MTgxNzg0NywiZXhwIjoxNzUxOTA0MjQ3fQ.ZikvEPc2GsQwRYof7CHLdHxWxLfmTGuTUW6d3mSol7M
+
+### Update a lesson
+PATCH http://localhost:3000/lessons/836161d9-3e69-4121-a5aa-e0adb641c5f0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTQ4ZDE0Mi0yNjA0LTQ0YWQtODUzMS01NDllMzFmYmY4NDAiLCJlbWFpbCI6Imluc3RydWN0b3IiLCJyb2xlIjoiSU5TVFJVQ1RPUiIsImlhdCI6MTc1MTgxNzg0NywiZXhwIjoxNzUxOTA0MjQ3fQ.ZikvEPc2GsQwRYof7CHLdHxWxLfmTGuTUW6d3mSol7M
+Content-Type: application/json
+
+{
+  "title": "Updated Lesson Title",
+  "content": "Updated lesson content with more detailed information..."
+}
+
+### Delete a lesson
+DELETE http://localhost:3000/lessons/836161d9-3e69-4121-a5aa-e0adb641c5f0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTQ4ZDE0Mi0yNjA0LTQ0YWQtODUzMS01NDllMzFmYmY4NDAiLCJlbWFpbCI6Imluc3RydWN0b3IiLCJyb2xlIjoiSU5TVFJVQ1RPUiIsImlhdCI6MTc1MTgxNzg0NywiZXhwIjoxNzUxOTA0MjQ3fQ.ZikvEPc2GsQwRYof7CHLdHxWxLfmTGuTUW6d3mSol7M
+
+# ========================================
+# ERROR TESTS
+# ========================================
+
+### Test student trying to create a lesson (should fail - 403)
+POST http://localhost:3000/lessons
+Authorization: Bearer STUDENT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "title": "Student Created Lesson",
+  "content": "This should fail for students",
+  "moduleId": "MODULE_ID_HERE",
+  "order": 1
+}
+
+### Test creating lesson without authentication (should fail - 401)
+POST http://localhost:3000/lessons
+Content-Type: application/json
+
+{
+  "title": "Unauthenticated Lesson",
+  "content": "This should fail",
+  "moduleId": "MODULE_ID_HERE",
+  "order": 1
+}
+
+### Test creating lesson with invalid module ID (should fail - 404)
+POST http://localhost:3000/lessons
+Authorization: Bearer INSTRUCTOR_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "title": "Invalid Module Lesson",
+  "content": "This should fail",
+  "moduleId": "invalid-module-id",
+  "order": 1
+}
+
+### Test creating lesson with missing required fields (should fail - 400)
+POST http://localhost:3000/lessons
+Authorization: Bearer INSTRUCTOR_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "title": "Incomplete Lesson"
+}
+
+# ========================================
+# USEFUL INFORMATION
+# ========================================
+
+# Admin Token: Get from admin login response
+# Instructor Token: Get from instructor login response
+# Student Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
+
+# Steps to create lessons:
+# 1. Login as admin/instructor to get token
+# 2. Create a course (if not exists) - get course ID from response
+# 3. Create modules for the course - get module ID from response  
+# 4. Create lessons within modules using module ID
+# 5. Replace TOKEN_HERE and ID_HERE with actual values
+# 
+# Flow: User ID → Course ID → Module ID → Lesson 

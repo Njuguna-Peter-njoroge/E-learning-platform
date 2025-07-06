@@ -3,9 +3,6 @@ import { EnrollmentStatus } from '@prisma/client';
 
 export class CreateEnrollmentDto {
   @IsUUID()
-  userId: string;
-
-  @IsUUID()
   courseId: string;
 
   @IsOptional()

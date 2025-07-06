@@ -1,0 +1,103 @@
+# Quick Authentication Tests - Get Tokens Fast
+# Run these in sequence to get working tokens
+
+@baseUrl = http://localhost:3000
+
+# ========================================
+# QUICK TOKEN GETTING
+# ========================================
+
+### 1. Create Admin User
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "fullName": "Admin User",
+  "email": "admin@example.com",
+  "password": "admin123",
+  "role": "ADMIN"
+}
+
+### 2. Login as Admin (should work immediately)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### 3. Create Student User
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Student User",
+  "email": "student@example.com",
+  "password": "student123"
+}
+
+### 4. Create Instructor User
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Instructor User",
+  "email": "instructor@example.com",
+  "password": "instructor123"
+}
+
+### 5. Verify Student Email (replace 123456 with actual OTP)
+POST {{baseUrl}}/auth/verify-email
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "token": "123456"
+}
+
+### 6. Login as Student (after verification)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "student123"
+}
+
+### 7. Verify Instructor Email (replace 123456 with actual OTP)
+POST {{baseUrl}}/auth/verify-email
+Content-Type: application/json
+
+{
+  "email": "instructor@example.com",
+  "token": "123456"
+}
+
+### 8. Login as Instructor (after verification)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "instructor@example.com",
+  "password": "instructor123"
+}
+
+# ========================================
+# TOKEN USAGE EXAMPLES
+# ========================================
+
+### Test Admin Access (copy token from step 2 response)
+GET {{baseUrl}}/users
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+Content-Type: application/json
+
+### Test Student Access (copy token from step 6 response)
+GET {{baseUrl}}/users/profile
+Authorization: Bearer YOUR_STUDENT_TOKEN_HERE
+Content-Type: application/json
+
+### Test Instructor Access (copy token from step 8 response)
+GET {{baseUrl}}/users/profile
+Authorization: Bearer YOUR_INSTRUCTOR_TOKEN_HERE
+Content-Type: application/json 

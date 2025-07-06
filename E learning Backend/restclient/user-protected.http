@@ -1,0 +1,142 @@
+# Protected User API Tests
+# These endpoints require authentication and authorization
+
+# First, login to get a token
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "njugunahpeternjoroge@gmail.com",
+  "password": "Admin123!"
+}
+
+### Store the token from the login response above
+# Replace YOUR_JWT_TOKEN with the actual token from login response
+
+### Get user profile (requires authentication)
+GET http://localhost:3000/users/profile
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Get all users (requires ADMIN or INSTRUCTOR role)
+GET http://localhost:3000/users
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Get all users with filters (requires ADMIN or INSTRUCTOR role)
+GET http://localhost:3000/users?status=ACTIVE&role=STUDENT
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Get active users (requires ADMIN or INSTRUCTOR role)
+GET http://localhost:3000/users/active
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Get pending users (requires ADMIN role)
+GET http://localhost:3000/users/pending
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Get banned users (requires ADMIN role)
+GET http://localhost:3000/users/banned
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Get user statistics (requires ADMIN role)
+GET http://localhost:3000/users/stats
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Get paginated users (requires ADMIN or INSTRUCTOR role)
+GET http://localhost:3000/users/paginated?page=1&limit=5
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Get specific user by ID (requires ADMIN or INSTRUCTOR role)
+GET http://localhost:3000/users/USER_ID_HERE
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Update user profile (requires authentication)
+PATCH http://localhost:3000/users/profile
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "fullName": "Updated Name",
+  "email": "updated@example.com"
+}
+
+### Change own password (requires authentication)
+PATCH http://localhost:3000/users/profile/password
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "currentPassword": "oldpassword",
+  "newPassword": "newpassword123"
+}
+
+### Create new user (requires ADMIN role)
+POST http://localhost:3000/users
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "fullName": "New User",
+  "email": "newuser@example.com",
+  "password": "password123",
+  "role": "STUDENT"
+}
+
+### Update specific user (requires ADMIN role)
+PATCH http://localhost:3000/users/USER_ID_HERE
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "fullName": "Updated User Name",
+  "role": "INSTRUCTOR"
+}
+
+### Change user password (requires ADMIN role)
+PATCH http://localhost:3000/users/USER_ID_HERE/password
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "currentPassword": "oldpassword",
+  "newPassword": "newpassword123"
+}
+
+### Set user status to pending (requires ADMIN role)
+PATCH http://localhost:3000/users/USER_ID_HERE/status/pending
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Reactivate user (requires ADMIN role)
+PATCH http://localhost:3000/users/USER_ID_HERE/status/active
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Ban user (requires ADMIN role)
+DELETE http://localhost:3000/users/USER_ID_HERE
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Bulk update user status (requires ADMIN role)
+POST http://localhost:3000/users/bulk/status
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "ids": ["user-id-1", "user-id-2"],
+  "status": "ACTIVE"
+}
+
+### Bulk delete users (requires ADMIN role)
+POST http://localhost:3000/users/bulk/delete
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "ids": ["user-id-1", "user-id-2"]
+}
+
+### Test unauthorized access (should fail)
+GET http://localhost:3000/users
+# No Authorization header - should return 401
+
+### Test insufficient permissions (should fail)
+GET http://localhost:3000/users/stats
+Authorization: Bearer STUDENT_TOKEN_HERE
+# Should return 403 if student tries to access admin-only endpoint 

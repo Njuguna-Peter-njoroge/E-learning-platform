@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -15,9 +16,30 @@ import { CertificatesModule } from './certificates/certificates.module';
 import { LessonModule } from './lesson/lesson.module';
 import { UserModule } from './user/user.module';
 import { QuestionModule } from './question/question.module';
+// import { TaskAnswersModule } from './task-answers/task-answers.module';
+import { MailerModule } from '../Utils/mailermodule';
 
 @Module({
-  imports: [AuthModule,  CourseModule, ContentModule, EnrollmentModule, ProgressModule, QuizModule, ReviewModule, AdminModule, AnalyticsModule, CertificatesModule, LessonModule, UserModule, QuestionModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MailerModule,
+    AuthModule,  
+    CourseModule, 
+    ContentModule, 
+    EnrollmentModule, 
+    ProgressModule, 
+    QuizModule, 
+    ReviewModule, 
+    AdminModule, 
+    AnalyticsModule, 
+    CertificatesModule, 
+    LessonModule, 
+    UserModule, 
+    QuestionModule
+    // TaskAnswersModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
