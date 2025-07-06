@@ -2,6 +2,7 @@ import { IsString, IsEnum, IsNotEmpty } from 'class-validator';
 import { CourseStatus, Difficulty } from '@prisma/client';
 
 export class CreateCourseDto {
+  iconImage:string 
   @IsString()
   @IsNotEmpty()
   title: string;
@@ -19,5 +20,5 @@ export class CreateCourseDto {
   status: CourseStatus;
 
   @IsString()
-  instructorId: string;
+  instructorName: string;
 }
