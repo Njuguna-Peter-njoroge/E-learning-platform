@@ -67,36 +67,40 @@ export class MailerService {
                 <meta charset="utf-8">
                 <title>Welcome to E-Learning Platform</title>
                 <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background: #4CAF50; color: white; padding: 20px; text-align: center; }
-                    .content { padding: 20px; background: #f9f9f9; }
-                    .otp-box { background: #fff; border: 2px solid #4CAF50; padding: 15px; text-align: center; margin: 20px 0; }
-                    .otp-code { font-size: 24px; font-weight: bold; color: #4CAF50; }
-                    .footer { text-align: center; padding: 20px; color: #666; }
+                  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f8fb; color: #222; }
+                  .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); overflow: hidden; }
+                  .header { background: #f7931e; color: #fff; padding: 32px 24px 24px 24px; text-align: center; }
+                  .header h1 { margin: 0; font-size: 2.2rem; }
+                  .header img { width: 80px; margin-top: 16px; }
+                  .content { padding: 32px 24px 24px 24px; }
+                  .content h2 { color: #00bfff; margin-top: 0; }
+                  .otp-box { background: #f4f8fb; border: 2px dashed #00bfff; border-radius: 12px; padding: 18px; text-align: center; margin: 28px 0; }
+                  .otp-code { font-size: 2rem; font-weight: bold; color: #f7931e; letter-spacing: 2px; }
+                  .cta { display: block; margin: 32px auto 0 auto; background: #00bfff; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 1.1rem; width: max-content; }
+                  .footer { text-align: center; padding: 24px; color: #888; font-size: 0.97rem; background: #f4f8fb; }
                 </style>
             </head>
             <body>
                 <div class="container">
-                    <div class="header">
-                        <h1>Welcome to E-Learning Platform</h1>
+                  <div class="header">
+                    <h1>Welcome to E-Learning!</h1>
+                    <img src="https://img.icons8.com/color/96/000000/graduation-cap.png" alt="Welcome" />
+                  </div>
+                  <div class="content">
+                    <h2>Hello ${name},</h2>
+                    <p>We're thrilled to have you join our learning community! Your journey to new skills and knowledge starts now.</p>
+                    <p>To activate your account, please use the verification code below:</p>
+                    <div class="otp-box">
+                      <div>Your verification code:</div>
+                      <div class="otp-code">${otpCode}</div>
                     </div>
-                    <div class="content">
-                        <h2>Hello ${name}!</h2>
-                        <p>Welcome to our E-Learning Platform! We're excited to have you on board.</p>
-                        <p>To complete your registration, please use the verification code below:</p>
-                        
-                        <div class="otp-box">
-                            <p>Your verification code:</p>
-                            <div class="otp-code">${otpCode}</div>
-                        </div>
-                        
-                        <p>This code will expire in 10 minutes for security reasons.</p>
-                        <p>If you didn't create an account with us, please ignore this email.</p>
-                    </div>
-                    <div class="footer">
-                        <p>&copy; ${new Date().getFullYear()} E-Learning Platform. All rights reserved.</p>
-                    </div>
+                    <p>This code is valid for 10 minutes. If you did not sign up, you can safely ignore this email.</p>
+                    <a class="cta" href="${baseUrl}/login">Go to E-Learning Platform</a>
+                  </div>
+                  <div class="footer">
+                    &copy; ${new Date().getFullYear()} E-Learning Platform. <br>
+                    Need help? Contact <a href="mailto:support@elearning.com">support@elearning.com</a>
+                  </div>
                 </div>
             </body>
             </html>
@@ -110,6 +114,7 @@ export class MailerService {
     }
 
     async sendPasswordResetEmail(email: string, name: string, otpCode: string): Promise<void> {
+        const baseUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
         const htmlContent = `
             <!DOCTYPE html>
             <html>
@@ -117,41 +122,43 @@ export class MailerService {
                 <meta charset="utf-8">
                 <title>Password Reset - E-Learning Platform</title>
                 <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background: #f44336; color: white; padding: 20px; text-align: center; }
-                    .content { padding: 20px; background: #f9f9f9; }
-                    .otp-box { background: #fff; border: 2px solid #f44336; padding: 15px; text-align: center; margin: 20px 0; }
-                    .otp-code { font-size: 24px; font-weight: bold; color: #f44336; }
-                    .footer { text-align: center; padding: 20px; color: #666; }
+                  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f8fb; color: #222; }
+                  .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); overflow: hidden; }
+                  .header { background: #f44336; color: #fff; padding: 32px 24px 24px 24px; text-align: center; }
+                  .header h1 { margin: 0; font-size: 2.2rem; }
+                  .header img { width: 80px; margin-top: 16px; }
+                  .content { padding: 32px 24px 24px 24px; }
+                  .content h2 { color: #f44336; margin-top: 0; }
+                  .otp-box { background: #f4f8fb; border: 2px dashed #f44336; border-radius: 12px; padding: 18px; text-align: center; margin: 28px 0; }
+                  .otp-code { font-size: 2rem; font-weight: bold; color: #f44336; letter-spacing: 2px; }
+                  .cta { display: block; margin: 32px auto 0 auto; background: #f44336; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 1.1rem; width: max-content; }
+                  .footer { text-align: center; padding: 24px; color: #888; font-size: 0.97rem; background: #f4f8fb; }
                 </style>
             </head>
             <body>
                 <div class="container">
-                    <div class="header">
-                        <h1>Password Reset Request</h1>
+                  <div class="header">
+                    <h1>Password Reset Request</h1>
+                    <img src="https://img.icons8.com/color/96/000000/lock-2.png" alt="Reset" />
+                  </div>
+                  <div class="content">
+                    <h2>Hello ${name},</h2>
+                    <p>We received a request to reset your password for your E-Learning Platform account.</p>
+                    <div class="otp-box">
+                      <div>Your reset code:</div>
+                      <div class="otp-code">${otpCode}</div>
                     </div>
-                    <div class="content">
-                        <h2>Hello ${name}!</h2>
-                        <p>We received a request to reset your password for your E-Learning Platform account.</p>
-                        <p>Use the verification code below to reset your password:</p>
-                        
-                        <div class="otp-box">
-                            <p>Your reset code:</p>
-                            <div class="otp-code">${otpCode}</div>
-                        </div>
-                        
-                        <p>This code will expire in 10 minutes for security reasons.</p>
-                        <p>If you didn't request a password reset, please ignore this email.</p>
-                    </div>
-                    <div class="footer">
-                        <p>&copy; ${new Date().getFullYear()} E-Learning Platform. All rights reserved.</p>
-                    </div>
+                    <p>This code is valid for 10 minutes. If you did not request a password reset, you can safely ignore this email.</p>
+                    <a class="cta" href="${baseUrl}/login">Go to E-Learning Platform</a>
+                  </div>
+                  <div class="footer">
+                    &copy; ${new Date().getFullYear()} E-Learning Platform. <br>
+                    Need help? Contact <a href="mailto:support@elearning.com">support@elearning.com</a>
+                  </div>
                 </div>
             </body>
             </html>
         `;
-
         await this.sendEmail({
             to: email,
             subject: 'Password Reset - E-Learning Platform',
@@ -160,6 +167,7 @@ export class MailerService {
     }
 
     async sendEmailVerification(email: string, name: string, otpCode: string): Promise<void> {
+        const baseUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
         const htmlContent = `
             <!DOCTYPE html>
             <html>
@@ -167,41 +175,43 @@ export class MailerService {
                 <meta charset="utf-8">
                 <title>Email Verification - E-Learning Platform</title>
                 <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background: #2196F3; color: white; padding: 20px; text-align: center; }
-                    .content { padding: 20px; background: #f9f9f9; }
-                    .otp-box { background: #fff; border: 2px solid #2196F3; padding: 15px; text-align: center; margin: 20px 0; }
-                    .otp-code { font-size: 24px; font-weight: bold; color: #2196F3; }
-                    .footer { text-align: center; padding: 20px; color: #666; }
+                  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f8fb; color: #222; }
+                  .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); overflow: hidden; }
+                  .header { background: #00bfff; color: #fff; padding: 32px 24px 24px 24px; text-align: center; }
+                  .header h1 { margin: 0; font-size: 2.2rem; }
+                  .header img { width: 80px; margin-top: 16px; }
+                  .content { padding: 32px 24px 24px 24px; }
+                  .content h2 { color: #f7931e; margin-top: 0; }
+                  .otp-box { background: #f4f8fb; border: 2px dashed #00bfff; border-radius: 12px; padding: 18px; text-align: center; margin: 28px 0; }
+                  .otp-code { font-size: 2rem; font-weight: bold; color: #00bfff; letter-spacing: 2px; }
+                  .cta { display: block; margin: 32px auto 0 auto; background: #00bfff; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 1.1rem; width: max-content; }
+                  .footer { text-align: center; padding: 24px; color: #888; font-size: 0.97rem; background: #f4f8fb; }
                 </style>
             </head>
             <body>
                 <div class="container">
-                    <div class="header">
-                        <h1>Email Verification</h1>
+                  <div class="header">
+                    <h1>Email Verification</h1>
+                    <img src="https://img.icons8.com/color/96/000000/secured-letter.png" alt="Verify" />
+                  </div>
+                  <div class="content">
+                    <h2>Hello ${name},</h2>
+                    <p>Please verify your email address to complete your registration.</p>
+                    <div class="otp-box">
+                      <div>Your verification code:</div>
+                      <div class="otp-code">${otpCode}</div>
                     </div>
-                    <div class="content">
-                        <h2>Hello ${name}!</h2>
-                        <p>Please verify your email address to complete your registration.</p>
-                        <p>Use the verification code below:</p>
-                        
-                        <div class="otp-box">
-                            <p>Your verification code:</p>
-                            <div class="otp-code">${otpCode}</div>
-                        </div>
-                        
-                        <p>This code will expire in 10 minutes for security reasons.</p>
-                        <p>If you didn't create an account with us, please ignore this email.</p>
-                    </div>
-                    <div class="footer">
-                        <p>&copy; ${new Date().getFullYear()} E-Learning Platform. All rights reserved.</p>
-                    </div>
+                    <p>This code is valid for 10 minutes. If you did not sign up, you can safely ignore this email.</p>
+                    <a class="cta" href="${baseUrl}/login">Go to E-Learning Platform</a>
+                  </div>
+                  <div class="footer">
+                    &copy; ${new Date().getFullYear()} E-Learning Platform. <br>
+                    Need help? Contact <a href="mailto:support@elearning.com">support@elearning.com</a>
+                  </div>
                 </div>
             </body>
             </html>
         `;
-
         await this.sendEmail({
             to: email,
             subject: 'Email Verification - E-Learning Platform',
@@ -210,6 +220,7 @@ export class MailerService {
     }
 
     async sendCourseEnrollmentEmail(email: string, name: string, courseName: string): Promise<void> {
+        const baseUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
         const htmlContent = `
             <!DOCTYPE html>
             <html>
@@ -217,31 +228,36 @@ export class MailerService {
                 <meta charset="utf-8">
                 <title>Course Enrollment - E-Learning Platform</title>
                 <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background: #4CAF50; color: white; padding: 20px; text-align: center; }
-                    .content { padding: 20px; background: #f9f9f9; }
-                    .footer { text-align: center; padding: 20px; color: #666; }
+                  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f8fb; color: #222; }
+                  .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); overflow: hidden; }
+                  .header { background: #00bfff; color: #fff; padding: 32px 24px 24px 24px; text-align: center; }
+                  .header h1 { margin: 0; font-size: 2.2rem; }
+                  .header img { width: 80px; margin-top: 16px; }
+                  .content { padding: 32px 24px 24px 24px; }
+                  .content h2 { color: #f7931e; margin-top: 0; }
+                  .footer { text-align: center; padding: 24px; color: #888; font-size: 0.97rem; background: #f4f8fb; }
                 </style>
             </head>
             <body>
                 <div class="container">
-                    <div class="header">
-                        <h1>Course Enrollment Confirmation</h1>
-                    </div>
-                    <div class="content">
-                        <h2>Hello ${name}!</h2>
-                        <p>You have successfully enrolled in the course: <strong>${courseName}</strong></p>
-                        <p>You can now access your course materials and start learning!</p>
-                    </div>
-                    <div class="footer">
-                        <p>&copy; ${new Date().getFullYear()} E-Learning Platform. All rights reserved.</p>
-                    </div>
+                  <div class="header">
+                    <h1>Course Enrollment Confirmation</h1>
+                    <img src="https://img.icons8.com/color/96/000000/open-book--v2.png" alt="Enrolled" />
+                  </div>
+                  <div class="content">
+                    <h2>Hello ${name},</h2>
+                    <p>You have successfully enrolled in the course: <strong>${courseName}</strong></p>
+                    <p>You can now access your course materials and start learning!</p>
+                    <a class="cta" href="${baseUrl}/courses">Go to My Courses</a>
+                  </div>
+                  <div class="footer">
+                    &copy; ${new Date().getFullYear()} E-Learning Platform. <br>
+                    Need help? Contact <a href="mailto:support@elearning.com">support@elearning.com</a>
+                  </div>
                 </div>
             </body>
             </html>
         `;
-
         await this.sendEmail({
             to: email,
             subject: `Course Enrollment - ${courseName}`,
@@ -250,6 +266,7 @@ export class MailerService {
     }
 
     async sendCourseCompletionEmail(email: string, name: string, courseName: string): Promise<void> {
+        const baseUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
         const htmlContent = `
             <!DOCTYPE html>
             <html>
@@ -257,32 +274,37 @@ export class MailerService {
                 <meta charset="utf-8">
                 <title>Course Completion - E-Learning Platform</title>
                 <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background: #FF9800; color: white; padding: 20px; text-align: center; }
-                    .content { padding: 20px; background: #f9f9f9; }
-                    .footer { text-align: center; padding: 20px; color: #666; }
+                  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f8fb; color: #222; }
+                  .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); overflow: hidden; }
+                  .header { background: #f7931e; color: #fff; padding: 32px 24px 24px 24px; text-align: center; }
+                  .header h1 { margin: 0; font-size: 2.2rem; }
+                  .header img { width: 80px; margin-top: 16px; }
+                  .content { padding: 32px 24px 24px 24px; }
+                  .content h2 { color: #00bfff; margin-top: 0; }
+                  .footer { text-align: center; padding: 24px; color: #888; font-size: 0.97rem; background: #f4f8fb; }
                 </style>
             </head>
             <body>
                 <div class="container">
-                    <div class="header">
-                        <h1>🎉 Course Completion!</h1>
-                    </div>
-                    <div class="content">
-                        <h2>Congratulations ${name}!</h2>
-                        <p>You have successfully completed the course: <strong>${courseName}</strong></p>
-                        <p>Your certificate will be available in your dashboard shortly.</p>
-                        <p>Keep up the great work and continue learning!</p>
-                    </div>
-                    <div class="footer">
-                        <p>&copy; ${new Date().getFullYear()} E-Learning Platform. All rights reserved.</p>
-                    </div>
+                  <div class="header">
+                    <h1>🎉 Course Completion!</h1>
+                    <img src="https://img.icons8.com/color/96/000000/certificate.png" alt="Completed" />
+                  </div>
+                  <div class="content">
+                    <h2>Congratulations ${name}!</h2>
+                    <p>You have successfully completed the course: <strong>${courseName}</strong></p>
+                    <p>Your certificate will be available in your dashboard shortly.</p>
+                    <p>Keep up the great work and continue learning!</p>
+                    <a class="cta" href="${baseUrl}/dashboard">Go to Dashboard</a>
+                  </div>
+                  <div class="footer">
+                    &copy; ${new Date().getFullYear()} E-Learning Platform. <br>
+                    Need help? Contact <a href="mailto:support@elearning.com">support@elearning.com</a>
+                  </div>
                 </div>
             </body>
             </html>
         `;
-
         await this.sendEmail({
             to: email,
             subject: `Course Completion - ${courseName}`,

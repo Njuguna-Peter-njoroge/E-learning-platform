@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { StudentService, Student, CourseProgress, StudentTask, Certificate } from '../services/student.service';
+import {Header} from '../component/header/header';
 
 @Component({
   selector: 'app-student-dashboard',
   templateUrl: './student-dashboard.html',
   styleUrls: ['./student-dashboard.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule]
+  imports: [CommonModule, FormsModule, HttpClientModule, Header]
 })
 export class StudentDashboardComponent implements OnInit {
   // Student data

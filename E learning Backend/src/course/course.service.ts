@@ -18,7 +18,7 @@ export class CourseService {
 
     if (!instructor) {
 
-      throw new NotFoundException(`Instructor with ID ${dto.instructorName} not found`master
+      throw new NotFoundException(`Instructor with ID ${dto.instructorName} not found`)
     }
 
     if (instructor.role !== 'INSTRUCTOR' && instructor.role !== 'ADMIN') {
@@ -26,7 +26,7 @@ export class CourseService {
     }
 
     // Ensure the authenticated user is the same as the instructor or is an admin
- master
+
     if (userId !== instructor.id && instructor.role !== 'ADMIN') {
       throw new ForbiddenException('You can only create courses for your own account');
 
