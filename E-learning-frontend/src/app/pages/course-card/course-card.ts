@@ -15,8 +15,10 @@ import { RouterLink } from '@angular/router';
       <div class="text-center space-y-1">
       <h2 class="text-xl font-bold mb-4 mt-4">{{ course().title }}</h2>
       <p class="text-gray-600">{{ course().description }}</p>
-      <p class="text-sm mt-2 italic text-gray-500">Level: {{ course().level }}</p>
+      <div class="flex justify-center">
+      <p class="text-sm ml-2 italic text-gray-500">Level: {{ course().level }}</p>
       <p class="text-sm text-gray-500">Instructor: {{ course().instructor?.fullName }}</p>
+      </div>
     </div>
     </div>
     </button> 
