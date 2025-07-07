@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth';  // Adjust path as needed
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule,RouterLink],
   template: `
     <div class="min-h-screen flex items-center justify-center bg-white rounded-xl">
       <div>
@@ -43,7 +44,7 @@ import { RouterModule } from '@angular/router';
           </div>
 
           <div class="flex justify-end mt-6">
-            <button type="submit" class="bg-orange-600 text-white py-2 rounded-xl hover:bg-orange-700 transition w-[200px]">
+            <button type="submit" class="bg-orange-600  text-white py-2 rounded-xl hover:bg-orange-700 transition w-[200px]" >
               Register
             </button>
           </div>
@@ -55,7 +56,11 @@ import { RouterModule } from '@angular/router';
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.registerForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -65,18 +70,26 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
-      const { password, confirmPassword } = this.registerForm.value;
-
-      if (password !== confirmPassword) {
-        console.error('Passwords do not match');
-        return;
-      }
-
-      console.log('Register Data:', this.registerForm.value);
-      // TODO: Send register request to backend
-    } else {
+    if (this.registerForm.invalid) {
       console.log('Form Invalid');
+      return;
     }
+
+    const { fullName, email, password, confirmPassword } = this.registerForm.value;
+
+    if (password !== confirmPassword) {
+      console.error('Passwords do not match');
+      return;
+    }
+
+    this.authService.register({ fullName, email, password }).subscribe({
+      next: (response) => {
+        console.log('Registration successful', response);
+        this.router.navigate(['/verify-email']); // or wherever you want to redirect
+      },
+      error: (err) => {
+        console.error('Registration failed', err);
+      }
+    });
   }
 }

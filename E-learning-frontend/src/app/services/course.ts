@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
 // Enums for course status and difficulty
@@ -80,8 +80,15 @@ export class CourseService {
 
   
   update(id: string, dto: UpdateCourseDto): Observable<Course> {
-    return this.http.patch<Course>(`${this.apiUrl}/${id}`, dto);
+    const token = localStorage.getItem('access_token'); // Or however you store your token
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  
+    return this.http.patch<Course>(`${this.apiUrl}/${id}`, dto, { headers });
   }
+  
 
 
   remove(id: string): Observable<void> {

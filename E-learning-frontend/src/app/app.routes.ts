@@ -4,6 +4,9 @@ import { Courses } from './pages/courses/courses';
 import { CourseDetails } from './pages/course-details/course-details';
 import { LoginComponent } from './component/login/login';
 import { RegisterComponent } from './component/register/register';
+import { VerifyEmailComponent } from './pages/verify-email/verify-email';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password';
 
 export const routes: Routes = [
     {
@@ -38,7 +41,20 @@ export const routes: Routes = [
       {
         path: 'tregister',
         component: RegisterComponent
+      },
+      {
+        path: 'verify-email',
+        component: VerifyEmailComponent
+      },
+      {
+        path: 'forgot-password',
+        component: ForgotPasswordComponent
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent
       }
+    
     
       
       

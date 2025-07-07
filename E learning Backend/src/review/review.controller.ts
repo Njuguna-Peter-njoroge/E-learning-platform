@@ -12,13 +12,13 @@ import {
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dtos/create-review.dto'; 
 import { UpdateReviewDto } from './dtos/update-review.dto'; 
-//import { JwtAuthGuard } ;
+import { JwtAuthGuard } from 'src/auth/Guards/auth.guards'; 
 
 @Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Req() req, @Body() dto: CreateReviewDto) {
     return this.reviewService.create(req.user.id, dto);
