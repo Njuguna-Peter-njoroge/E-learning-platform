@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dtos/create-review.dto'; 
-import { UpdateReviewDto } from './dtos/update-review.dto';
-import {JwtAuthGuard} from "../auth/Guards/auth.guards";
-//import { JwtAuthGuard } ;
+import { UpdateReviewDto } from './dtos/update-review.dto'; 
+import { JwtAuthGuard } from 'src/auth/Guards/auth.guards'; 
+master
 
 @Controller('reviews')
 export class ReviewController {
