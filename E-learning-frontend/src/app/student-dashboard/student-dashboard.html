@@ -1,0 +1,59 @@
+<div class="dashboard-grid">
+  <!-- Main Content -->
+  <div class="dashboard-main">
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <div>
+        <div class="date">{{ getCurrentDate() }}</div>
+        <h2>Welcome back, {{ student()?.fullName || 'Student' }}!</h2>
+        <p class="subtitle">Always stay updated in your student portal</p>
+      </div>
+      <img src="assets/images/hero-girl_image-removebg-preview.png" alt="Welcome Illustration" class="banner-illustration" />
+    </div>
+
+    <!-- Finance Section -->
+    <div class="finance-section">
+      <h3>Finance</h3>
+      <div class="finance-cards">
+        <div class="finance-card">
+          <div class="finance-icon"><img src="assets/images/coin-stack.png" alt="Payable" /></div>
+          <div class="finance-amount">$ {{ financeData()?.totalPayable || '0' }}</div>
+          <div class="finance-label">Total Payable</div>
+        </div>
+        <div class="finance-card">
+          <div class="finance-icon"><img src="assets/images/wallet.png" alt="Paid" /></div>
+          <div class="finance-amount">$ {{ financeData()?.totalPaid || '0' }}</div>
+          <div class="finance-label">Total Paid</div>
+        </div>
+        <div class="finance-card">
+          <div class="finance-icon"><img src="assets/images/bar-chart.png" alt="Others" /></div>
+          <div class="finance-amount">$ {{ financeData()?.others || '0' }}</div>
+          <div class="finance-label">Others</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enrolled Courses Section -->
+    <div class="enrolled-courses-section">
+      <div class="courses-header">
+        <h3>Enrolled Courses</h3>
+        <a class="see-all" href="#">See all</a>
+      </div>
+      <div class="courses-list">
+        <ng-container *ngIf="courseProgress()?.length; else noCourses">
+          <div class="course-card" *ngFor="let course of courseProgress(); let i = index">
+            <div class="course-icon">
+              <!-- Example: <img src="assets/images/laptop.png" alt="Course Icon" /> -->
+            </div>
+            <div class="course-title">{{ course.course.title }}</div>
+            <div class="course-description">{{ course.course.description }}</div>
+            <button class="view-btn">View</button>
+          </div>
+        </ng-container>
+        <ng-template #noCourses>
+          <div class="no-courses">You are not enrolled in any courses yet.</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
