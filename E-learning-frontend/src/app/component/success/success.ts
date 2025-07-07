@@ -84,7 +84,7 @@ import { Component } from '@angular/core';
       <ul class="mt-4">
         <li>Accounting</li>
         <li>programming</li>
-        <li>Econimics</li>
+        <li>Economics</li>
         <li>Product Management</li>
         <li>Medicine</li>
       </ul>

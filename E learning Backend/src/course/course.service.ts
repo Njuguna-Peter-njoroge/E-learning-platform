@@ -9,6 +9,7 @@ export class CourseService {
 
 
   async create(dto: CreateCourseDto, userId: string) {
+
     // Verify the instructor exists
     const instructor = await this.prisma.user.findUnique({
       where: { id: dto.instructorName },
@@ -17,7 +18,7 @@ export class CourseService {
 
     if (!instructor) {
 
-      throw new NotFoundException(`Instructor with ID ${dto.instructorName} not found`);
+      throw new NotFoundException(`Instructor with ID ${dto.instructorName} not found`master
     }
 
     if (instructor.role !== 'INSTRUCTOR' && instructor.role !== 'ADMIN') {
@@ -25,8 +26,10 @@ export class CourseService {
     }
 
     // Ensure the authenticated user is the same as the instructor or is an admin
-    if (userId !== dto.instructorName && instructor.role !== 'ADMIN') {
-      throw new ForbiddenException('You can only create courses for your')
+ master
+    if (userId !== instructor.id && instructor.role !== 'ADMIN') {
+      throw new ForbiddenException('You can only create courses for your own account');
+
     }
 
     return this.prisma.course.create({

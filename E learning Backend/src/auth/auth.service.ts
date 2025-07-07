@@ -231,5 +231,78 @@ export class AuthService {
     return this.jwtService.verifyToken(token);
   }
 
+  // Development helper method to manually verify email
+  async manuallyVerifyEmail(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
 
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.isVerified) {
+      return {
+        message: 'User is already verified',
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          role: user.role,
+          isVerified: user.isVerified,
+        },
+      };
+    }
+
+    // Manually verify the email
+    const updatedUser = await this.prisma.user.update({
+      where: { email },
+      data: {
+        isVerified: true,
+        verificationToken: null,
+      },
+    });
+
+    return {
+      message: 'Email manually verified successfully',
+      user: {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        fullName: updatedUser.fullName,
+        role: updatedUser.role,
+        isVerified: updatedUser.isVerified,
+      },
+    };
+  }
+
+  // Development helper method to reset password
+  async resetPasswordManually(email: string, newPassword: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const updatedUser = await this.prisma.user.update({
+      where: { email },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return {
+      message: 'Password reset successfully',
+      user: {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        fullName: updatedUser.fullName,
+        role: updatedUser.role,
+        isVerified: updatedUser.isVerified,
+      },
+    };
+  }
 }

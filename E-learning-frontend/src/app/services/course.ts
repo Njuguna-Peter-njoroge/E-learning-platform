@@ -18,16 +18,15 @@ export enum Difficulty {
 
 export interface Course {
   id: string;
-  iconImage:string ;
+  iconImage: string;
   title: string;
   description: string;
-  level: Difficulty;
+  level: string;
   category: string;
-  status: CourseStatus;
+  status: string;
   instructorId: string;
   instructor?: {
     fullName: string;
-    email: string;
   };
   createdAt?: string;
   updatedAt?: string;
@@ -35,7 +34,7 @@ export interface Course {
 
 // DTO used when creating a course
 export interface CreateCourseDto {
-  iconImage:string ;
+  iconImage: string;
   title: string;
   description: string;
   level: Difficulty;
@@ -46,7 +45,7 @@ export interface CreateCourseDto {
 
 
 export interface UpdateCourseDto {
-  iconImage?:string ;
+  iconImage?: string;
   title?: string;
   description?: string;
   level?: Difficulty;
