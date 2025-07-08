@@ -7,6 +7,7 @@ import {
   Patch,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dtos/create-course.dto';
@@ -30,6 +31,20 @@ export class CourseController {
   @Get()
   findAll() {
     return this.courseService.findAll();
+  }
+
+  @Get('instructor/my-courses')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('INSTRUCTOR')
+  findInstructorCourses(@User() user: { id: string }) {
+    return this.courseService.findByInstructor(user.id);
+  }
+
+  @Get('instructor/dashboard-stats')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('INSTRUCTOR')
+  getInstructorDashboardStats(@User() user: { id: string }) {
+    return this.courseService.getInstructorDashboardStats(user.id);
   }
 
   @Get(':id')

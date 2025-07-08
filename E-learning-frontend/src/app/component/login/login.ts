@@ -26,11 +26,17 @@ import { HttpClientModule } from '@angular/common/http';
           <div class="my-8">
             <label class="block mb-1 font-medium">Email</label>
             <input formControlName="email" type="email" class="w-full border rounded-xl px-4 py-2 border-orange-600" placeholder="Enter your email" />
+            <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched" class="text-red-600 text-sm">
+              Please enter a valid email.
+            </div>
           </div>
 
           <div class="my-8">
             <label class="block mb-1 font-medium">Password</label>
             <input formControlName="password" type="password" class="w-full border rounded-xl px-4 py-2 border-orange-600" placeholder="Enter your password" />
+            <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched" class="text-red-600 text-sm">
+              Password is required.
+            </div>
           </div>
 
           <div class="flex justify-end mb-4">
@@ -71,6 +77,29 @@ export class LoginComponent {
           localStorage.setItem('access_token', res.access_token);
  
           this.router.navigate(['/courses']); 
+          
+          // Store the token (handle both access_token and token properties)
+          const token = res.access_token || res.token;
+          if (token) {
+            localStorage.setItem('access_token', token);
+          }
+          
+          // Store user data
+          if (res.user) {
+            localStorage.setItem('user_data', JSON.stringify(res.user));
+            localStorage.setItem('user_id', res.user.id || '');
+          }
+          
+          // Update login status
+          this.authService.updateLoginStatus();
+          
+          if (res.user && res.user.role === 'ADMIN') {
+            this.router.navigate(['/admindashboard']);
+          } else if (res.user && res.user.role === 'INSTRUCTOR') {
+            this.router.navigate(['/instructor-dashboard']);
+          } else {
+            this.router.navigate(['/courses']); 
+          }
         },
         error: (err) => {
           console.error('Login failed', err);
@@ -78,6 +107,7 @@ export class LoginComponent {
         },
       });
     } else {
+      this.loginForm.markAllAsTouched();
       console.log('Form Invalid');
     }
   }

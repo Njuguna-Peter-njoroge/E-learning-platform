@@ -86,4 +86,11 @@ export class ProgressController {
   findByUser(@Param('userId') userId: string) {
     return this.progressService.findByUser(userId);
   }
+
+  // Get instructor's students progress
+  @Get('instructor/students-progress')
+  @Roles(Role.INSTRUCTOR)
+  getInstructorStudentsProgress(@Request() req) {
+    return this.progressService.getInstructorStudentsProgress(req.user.id);
+  }
 }

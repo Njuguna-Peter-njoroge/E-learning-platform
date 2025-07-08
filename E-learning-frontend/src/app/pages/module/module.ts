@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModuleService } from '../../services/module';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { StudentService } from '../../services/student.service';
 
 @Component({
   selector: 'app-module-component',
@@ -18,8 +19,14 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
         <div class="flex justify-center mb-10">
           <button class="bg-orange-600 text-white p-2 px-8 mt-6 border rounded-xl" routerLink="/enroll-course">
             Enroll Now
+
+          <button class="bg-orange-600 text-white p-2 px-8 mt-6 border rounded-xl" (click)="enrollInCourse()" [disabled]="enrolling">
+            {{ enrolling ? 'Enrolling...' : 'Enroll now' }}
+ 
           </button>
         </div>
+        <div *ngIf="enrollSuccess" class="text-green-600 text-center mb-4">Enrolled successfully! Check your dashboard.</div>
+        <div *ngIf="enrollError" class="text-red-600 text-center mb-4">{{ enrollError }}</div>
 
         <hr />
         <div class="mt-10">
@@ -52,10 +59,15 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 export class ModuleComponent implements OnInit {
   modules: any[] = [];
   private courseId: string = '';
+  enrolling = false;
+  enrollSuccess = false;
+  enrollError: string | null = null;
 
   constructor(
     private moduleService: ModuleService,
-    private route: ActivatedRoute
+    private studentService: StudentService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -74,5 +86,26 @@ export class ModuleComponent implements OnInit {
     } else {
       console.warn('No courseId found in route');
     }
+  }
+
+  enrollInCourse() {
+    if (!this.courseId) return;
+    this.enrolling = true;
+    this.enrollSuccess = false;
+    this.enrollError = null;
+    this.studentService.enrollInCourse(this.courseId).subscribe({
+      next: () => {
+        this.enrolling = false;
+        this.enrollSuccess = true;
+        // Optionally, navigate to dashboard after a short delay
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 1500);
+      },
+      error: (err) => {
+        this.enrolling = false;
+        this.enrollError = err?.error?.message || 'Failed to enroll. Please try again.';
+      }
+    });
   }
 }

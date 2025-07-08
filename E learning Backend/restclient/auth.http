@@ -1,7 +1,4 @@
-# Authentication API Tests
-# Use these endpoints to test the authentication system
 
-# Global variables for storing tokens and user data
 @baseUrl = http://localhost:3000
 @contentType = application/json
 
@@ -115,10 +112,8 @@ Content-Type: application/json
 client.global.set("instructorToken", response.body.access_token);
 client.global.set("instructorUserId", response.body.user.id);
 %}
-
-# ========================================
-# PASSWORD RESET TESTS
-# ========================================
+ng
+#### PASSWORD RESET TESTS
 
 ### Forgot password
 POST {{baseUrl}}/auth/forgot-password
@@ -151,9 +146,7 @@ Content-Type: {{contentType}}
 client.global.set("updatedStudentToken", response.body.access_token);
 %}
 
-# ========================================
-# ERROR TESTS
-# ========================================
+#### ERROR TESTS
 
 ### Test invalid login credentials
 POST {{baseUrl}}/auth/login
@@ -225,9 +218,7 @@ Content-Type: {{contentType}}
 client.global.set("updatedAdminToken", response.body.access_token);
 %}
 
-# ========================================
-# TOKEN VALIDATION TESTS
-# ========================================
+### TOKEN VALIDATION TESTS
 
 ### Test with invalid token
 GET {{baseUrl}}/users/profile

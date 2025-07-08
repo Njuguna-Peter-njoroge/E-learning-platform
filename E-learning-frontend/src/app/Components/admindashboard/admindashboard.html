@@ -1,0 +1,389 @@
+<div class="admin-dashboard">
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="header-content">
+      <h2>Admin Dashboard</h2>
+      <p>Manage the entire platform with comprehensive analytics and controls</p>
+      <button class="logout-btn" (click)="logout()">
+        🚪 Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="admin-tabs">
+    <div class="flex items-center justify-between w-full">
+      <div class="flex gap-2">
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'overview'"
+          (click)="setActiveTab('overview')">
+          📊 Overview
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'users'"
+          (click)="setActiveTab('users')">
+          👥 Users
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'courses'"
+          (click)="setActiveTab('courses')">
+          📚 Courses
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'enrollments'"
+          (click)="setActiveTab('enrollments')">
+          🎓 Enrollments
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'analytics'"
+          (click)="setActiveTab('analytics')">
+          📈 Analytics
+        </button>
+      </div>
+      <button 
+        class="refresh-btn" 
+        (click)="refreshData()" 
+        [disabled]="loading"
+        title="Refresh Data"
+      >
+        <span *ngIf="loading">⏳ Loading...</span>
+        <span *ngIf="!loading">🔄 Refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading dashboard data...</p>
+  </div>
+
+  <!-- Overview Tab -->
+  <div *ngIf="activeTab === 'overview' && !loading" class="tab-content">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card primary">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3>{{ stats.totalStudents }}</h3>
+          <p>Total Students</p>
+        </div>
+      </div>
+      
+      <div class="stat-card success">
+        <div class="stat-icon">📚</div>
+        <div class="stat-content">
+          <h3>{{ stats.totalCourses }}</h3>
+          <p>Total Courses</p>
+        </div>
+      </div>
+      
+      <div class="stat-card info">
+        <div class="stat-icon">👨‍🏫</div>
+        <div class="stat-content">
+          <h3>{{ stats.totalInstructors }}</h3>
+          <p>Instructors</p>
+        </div>
+      </div>
+      
+      <div class="stat-card warning">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-content">
+          <h3>{{ stats.pendingApprovals }}</h3>
+          <p>Pending Approvals</p>
+        </div>
+      </div>
+      
+      <div class="stat-card secondary">
+        <div class="stat-icon">🎓</div>
+        <div class="stat-content">
+          <h3>{{ stats.totalEnrollments }}</h3>
+          <p>Total Enrollments</p>
+        </div>
+      </div>
+      
+      <div class="stat-card success">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h3>{{ stats.activeCourses }}</h3>
+          <p>Active Courses</p>
+        </div>
+      </div>
+      
+      <div class="stat-card purple">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-content">
+          <h3>{{ stats.completedCourses }}</h3>
+          <p>Completed Courses</p>
+        </div>
+      </div>
+      
+      <div class="stat-card blue">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <h3>{{ stats.averageCompletionRate }}%</h3>
+          <p>Completion Rate</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h3>Quick Actions</h3>
+      <div class="action-buttons">
+        <button class="action-btn primary" (click)="addNewCourse()">
+          ➕ Add New Course
+        </button>
+        <button class="action-btn secondary" (click)="manageUsers()">
+          👥 Manage Users
+        </button>
+        <button class="action-btn info" (click)="manageCourses()">
+          📚 Manage Courses
+        </button>
+        <button class="action-btn warning" (click)="viewAnalytics()">
+          📈 View Analytics
+        </button>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+      <h3>Recent Activity</h3>
+      <div class="activity-list">
+        <div class="activity-item" *ngFor="let user of users.slice(0, 5)">
+          <div class="activity-icon">👤</div>
+          <div class="activity-content">
+            <p><strong>{{ user.fullName }}</strong> joined the platform</p>
+            <small>{{ formatDate(user.createdAt) }}</small>
+          </div>
+          <div class="activity-status" [class]="'status-' + getStatusColor(user.status)">
+            {{ user.status }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Tab -->
+  <div *ngIf="activeTab === 'users' && !loading" class="tab-content">
+    <div class="section-header">
+      <h3>User Management</h3>
+      <div class="search-filter">
+        <input 
+          type="text" 
+          placeholder="Search users..." 
+          [(ngModel)]="userFilter"
+          class="search-input">
+      </div>
+    </div>
+
+    <div class="user-filters">
+      <button class="filter-btn" (click)="toggleStudents()">
+        Students ({{ studentCount }})
+      </button>
+      <button class="filter-btn" (click)="toggleInstructors()">
+        Instructors ({{ instructorCount }})
+      </button>
+    </div>
+
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Verified</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of getFilteredUsers()">
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span class="role-badge" [class]="'role-' + getRoleColor(user.role)">
+                {{ user.role }}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge" [class]="'status-' + getStatusColor(user.status)">
+                {{ user.status }}
+              </span>
+            </td>
+            <td>
+              <span class="verified-badge" [class]="user.isVerified ? 'verified' : 'not-verified'">
+                {{ user.isVerified ? '✓' : '✗' }}
+              </span>
+            </td>
+            <td>{{ formatDate(user.createdAt) }}</td>
+            <td>
+              <div class="action-buttons-small">
+                <button class="btn-small approve" (click)="approveUser(user.id)" 
+                        *ngIf="user.status === 'PENDING'">
+                  ✓
+                </button>
+                <button class="btn-small suspend" (click)="suspendUser(user.id)"
+                        *ngIf="user.status === 'ACTIVE'">
+                  ⏸
+                </button>
+                <button class="btn-small delete" (click)="deleteUser(user.id)">
+                  🗑
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Courses Tab -->
+  <div *ngIf="activeTab === 'courses' && !loading" class="tab-content">
+    <div class="section-header">
+      <h3>Course Management</h3>
+      <div class="search-filter">
+        <input 
+          type="text" 
+          placeholder="Search courses..." 
+          [(ngModel)]="courseFilter"
+          class="search-input">
+      </div>
+    </div>
+
+    <div class="course-filters">
+      <button class="filter-btn" (click)="toggleCourses()">
+        All Courses ({{ courseCount }})
+      </button>
+    </div>
+
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Level</th>
+            <th>Instructor</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of getFilteredCourses()">
+            <td>{{ course.title }}</td>
+            <td>{{ course.category }}</td>
+            <td>{{ course.level }}</td>
+            <td>{{ course.instructor?.fullName || 'N/A' }}</td>
+            <td>
+              <span class="status-badge" [class]="'status-' + getStatusColor(course.status)">
+                {{ course.status }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons-small">
+                <button class="btn-small approve" (click)="approveCourse(course.id)"
+                        *ngIf="course.status === 'DRAFT'">
+                  ✓
+                </button>
+                <button class="btn-small publish" (click)="publishCourse(course.id)"
+                        *ngIf="course.status === 'DRAFT'">
+                  📤
+                </button>
+                <button class="btn-small archive" (click)="archiveCourse(course.id)"
+                        *ngIf="course.status === 'PUBLISHED'">
+                  📦
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Enrollments Tab -->
+  <div *ngIf="activeTab === 'enrollments' && !loading" class="tab-content">
+    <div class="section-header">
+      <h3>Enrollment Management</h3>
+      <div class="search-filter">
+        <input 
+          type="text" 
+          placeholder="Search enrollments..." 
+          [(ngModel)]="enrollmentFilter"
+          class="search-input">
+      </div>
+    </div>
+
+    <div class="enrollment-filters">
+      <button class="filter-btn" (click)="toggleEnrollments()">
+        All Enrollments ({{ enrollmentCount }})
+      </button>
+    </div>
+
+    <div class="data-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Status</th>
+            <th>Enrolled Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let enrollment of getFilteredEnrollments()">
+            <td>{{ enrollment.student.fullName }}</td>
+            <td>{{ enrollment.course.title }}</td>
+            <td>
+              <span class="status-badge" [class]="'status-' + getStatusColor(enrollment.status)">
+                {{ enrollment.status }}
+              </span>
+            </td>
+            <td>{{ formatDate(enrollment.enrolledAt) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Analytics Tab -->
+  <div *ngIf="activeTab === 'analytics' && !loading" class="tab-content">
+    <div class="analytics-grid">
+      <div class="analytics-card">
+        <h4>User Growth</h4>
+        <div class="chart-placeholder">
+          <p>📈 User growth chart will be implemented here</p>
+        </div>
+      </div>
+      
+      <div class="analytics-card">
+        <h4>Course Performance</h4>
+        <div class="chart-placeholder">
+          <p>📊 Course performance metrics will be displayed here</p>
+        </div>
+      </div>
+      
+      <div class="analytics-card">
+        <h4>Completion Rates</h4>
+        <div class="chart-placeholder">
+          <p>🎯 Completion rate analytics will be shown here</p>
+        </div>
+      </div>
+      
+      <div class="analytics-card">
+        <h4>Revenue Analytics</h4>
+        <div class="chart-placeholder">
+          <p>💰 Revenue tracking will be implemented here</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

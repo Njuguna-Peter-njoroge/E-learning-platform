@@ -1,0 +1,375 @@
+<app-header></app-header>
+<div class="instructor-dashboard">
+  <!-- Header -->
+  <div class="instructor-header">
+    <div class="header-content">
+      <h2>Instructor Dashboard</h2>
+      <p>Manage your courses and track student progress</p>
+      <div class="instructor-info">
+        <span>Welcome, {{ instructor()?.fullName || 'Instructor' }}</span>
+        <span class="date">{{ getCurrentDate() }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="instructor-tabs">
+    <div class="flex items-center justify-between w-full">
+      <div class="flex gap-2">
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab() === 'overview'"
+          (click)="setActiveTab('overview')">
+          📊 Overview
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab() === 'courses'"
+          (click)="setActiveTab('courses')">
+          📚 My Courses
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab() === 'students'"
+          (click)="setActiveTab('students')">
+          👥 My Students
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab() === 'analytics'"
+          (click)="setActiveTab('analytics')">
+          📈 Analytics
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading()" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading instructor data...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error()" class="error-container">
+    <p class="error-message">{{ error() }}</p>
+    <button class="retry-btn" (click)="loadInstructorData()">Retry</button>
+  </div>
+
+  <!-- Overview Tab -->
+  <div *ngIf="activeTab() === 'overview' && !isLoading()" class="tab-content">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card primary">
+        <div class="stat-icon">📚</div>
+        <div class="stat-content">
+          <h3>{{ stats().totalCourses }}</h3>
+          <p>Total Courses</p>
+        </div>
+      </div>
+      
+      <div class="stat-card success">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3>{{ stats().totalStudents }}</h3>
+          <p>Total Students</p>
+        </div>
+      </div>
+      
+      <div class="stat-card info">
+        <div class="stat-icon">📖</div>
+        <div class="stat-content">
+          <h3>{{ stats().totalLessons }}</h3>
+          <p>Total Lessons</p>
+        </div>
+      </div>
+      
+      <div class="stat-card warning">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <h3>{{ stats().averageCompletionRate }}%</h3>
+          <p>Avg. Completion</p>
+        </div>
+      </div>
+      
+      <div class="stat-card secondary">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h3>{{ stats().activeCourses }}</h3>
+          <p>Active Courses</p>
+        </div>
+      </div>
+      
+      <div class="stat-card purple">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-content">
+          <h3>{{ stats().pendingApprovals }}</h3>
+          <p>Draft Courses</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h3>Quick Actions</h3>
+      <div class="action-buttons">
+        <button class="action-btn primary" (click)="createCourse()">
+          ➕ Create New Course
+        </button>
+        <button class="action-btn secondary" (click)="setActiveTab('students')">
+          👥 View Students
+        </button>
+        <button class="action-btn info" (click)="setActiveTab('courses')">
+          📚 Manage Courses
+        </button>
+        <button class="action-btn warning" (click)="setActiveTab('analytics')">
+          📈 View Analytics
+        </button>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+      <h3>Recent Student Activity</h3>
+      <div class="activity-list">
+        <div class="activity-item" *ngFor="let student of studentProgress().slice(0, 5)">
+          <div class="activity-icon">👤</div>
+          <div class="activity-content">
+            <p><strong>{{ student.studentName }}</strong> made progress in <strong>{{ student.courseTitle }}</strong></p>
+            <small>{{ formatDate(student.lastActivity) }} • {{ student.progressPercentage }}% complete</small>
+          </div>
+          <div class="activity-status" [class]="'status-' + getStatusClass('PUBLISHED')">
+            {{ student.progressPercentage }}%
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Courses Tab -->
+  <div *ngIf="activeTab() === 'courses' && !isLoading()" class="tab-content">
+    <div class="section-header">
+      <h3>My Courses</h3>
+      <div class="search-filter">
+        <input 
+          type="text" 
+          placeholder="Search courses..." 
+          [(ngModel)]="courseFilter"
+          class="search-input">
+      </div>
+    </div>
+
+    <div class="courses-grid">
+      <div class="course-card" *ngFor="let course of getFilteredCourses()">
+        <div class="course-header">
+          <div class="course-icon">
+            <div class="course-icon-placeholder">📚</div>
+          </div>
+          <div class="course-info">
+            <div class="course-title">{{ course.title }}</div>
+            <div class="course-description">{{ course.description }}</div>
+            <div class="course-meta">
+              <span class="level-badge">{{ course.level }}</span>
+              <span class="category-badge">{{ course.category }}</span>
+            </div>
+          </div>
+          <div class="course-status">
+            <span class="status-badge" [class]="getStatusClass(course.status)">
+              {{ getStatusText(course.status) }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="course-stats">
+          <div class="stat-item">
+            <span class="stat-label">Students</span>
+            <span class="stat-value">{{ course.enrollmentCount || 0 }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Avg. Progress</span>
+            <span class="stat-value">{{ course.averageProgress || 0 }}%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Created</span>
+            <span class="stat-value">{{ formatDate(course.createdAt) }}</span>
+          </div>
+        </div>
+
+        <div class="course-actions">
+          <button class="btn-primary" (click)="viewCourseDetails(course.id)">
+            View Details
+          </button>
+          <button class="btn-secondary" (click)="editCourse(course.id)">
+            Edit Course
+          </button>
+          <button class="btn-warning" 
+                  (click)="publishCourse(course.id)"
+                  *ngIf="course.status === 'DRAFT'">
+            Publish
+          </button>
+          <button class="btn-danger" 
+                  (click)="archiveCourse(course.id)"
+                  *ngIf="course.status === 'PUBLISHED'">
+            Archive
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Students Tab -->
+  <div *ngIf="activeTab() === 'students' && !isLoading()" class="tab-content">
+    <div class="section-header">
+      <h3>My Students</h3>
+      <div class="search-filter">
+        <input 
+          type="text" 
+          placeholder="Search students..." 
+          [(ngModel)]="studentFilter"
+          class="search-input">
+        <select [(ngModel)]="courseFilter" class="filter-select">
+          <option value="">All Courses</option>
+          <option *ngFor="let course of courses()" [value]="course.title">{{ course.title }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Student Statistics -->
+    <div class="student-stats">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h4>{{ getFilteredStudents().length }}</h4>
+          <p>Total Students</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-content">
+          <h4>{{ getAverageProgress() }}%</h4>
+          <p>Avg. Progress</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h4>{{ getCompletedStudents() }}</h4>
+          <p>Completed Courses</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-content">
+          <h4>{{ getActiveStudents() }}</h4>
+          <p>Active Students</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="students-grid">
+      <div class="student-card" *ngFor="let student of getFilteredStudents()">
+        <div class="student-header">
+          <div class="student-avatar">
+            <div class="avatar-placeholder">{{ student.studentName.charAt(0) }}</div>
+          </div>
+          <div class="student-info">
+            <div class="student-name">{{ student.studentName }}</div>
+            <div class="student-email">{{ student.studentEmail }}</div>
+            <div class="student-course">{{ student.courseTitle }}</div>
+            <div class="enrollment-date">Enrolled: {{ formatDate(student.enrollmentDate || student.lastActivity) }}</div>
+          </div>
+          <div class="student-progress">
+            <span class="progress-percentage">{{ student.progressPercentage }}%</span>
+            <span class="progress-status" [class]="getProgressStatusClass(student.progressPercentage)">
+              {{ getProgressStatusText(student.progressPercentage) }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="progress-bar">
+          <div class="progress-fill" 
+               [style.width.%]="student.progressPercentage"
+               [style.background-color]="getProgressColor(student.progressPercentage)">
+          </div>
+        </div>
+        
+        <div class="progress-details">
+          <div class="detail-row">
+            <span class="detail-label">Lessons Completed:</span>
+            <span class="detail-value">{{ student.completedLessons }} of {{ student.totalLessons }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Last Activity:</span>
+            <span class="detail-value">{{ formatDate(student.lastActivity) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Course Status:</span>
+            <span class="detail-value" [class]="getCourseStatusClass(student.progressPercentage)">
+              {{ getCourseStatusText(student.progressPercentage) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="student-actions">
+          <button class="btn-primary" (click)="viewStudentProgress(student.studentId)">
+            📊 View Progress
+          </button>
+          <button class="btn-secondary" (click)="sendMessageToStudent(student.studentId)">
+            💬 Send Message
+          </button>
+          <button class="btn-info" (click)="viewStudentDetails(student.studentId)">
+            👤 View Profile
+          </button>
+          <button class="btn-warning" 
+                  (click)="exportStudentReport(student.studentId)"
+                  *ngIf="student.progressPercentage > 0">
+            📄 Export Report
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="getFilteredStudents().length === 0" class="empty-state">
+      <div class="empty-icon">👥</div>
+      <h3>No Students Found</h3>
+      <p>You don't have any students enrolled in your courses yet.</p>
+      <button class="btn-primary" (click)="setActiveTab('courses')">
+        Create Your First Course
+      </button>
+    </div>
+  </div>
+
+  <!-- Analytics Tab -->
+  <div *ngIf="activeTab() === 'analytics' && !isLoading()" class="tab-content">
+    <div class="analytics-grid">
+      <div class="analytics-card">
+        <h4>Course Performance</h4>
+        <div class="chart-placeholder">
+          <p>📊 Course performance charts will be implemented here</p>
+        </div>
+      </div>
+      
+      <div class="analytics-card">
+        <h4>Student Engagement</h4>
+        <div class="chart-placeholder">
+          <p>📈 Student engagement metrics will be displayed here</p>
+        </div>
+      </div>
+      
+      <div class="analytics-card">
+        <h4>Completion Rates</h4>
+        <div class="chart-placeholder">
+          <p>🎯 Completion rate analytics will be shown here</p>
+        </div>
+      </div>
+      
+      <div class="analytics-card">
+        <h4>Revenue Analytics</h4>
+        <div class="chart-placeholder">
+          <p>💰 Revenue tracking will be implemented here</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { StudentService, Student, CourseProgress, StudentTask, Certificate } from '../services/student.service';
-import { Header } from "../component/header/header";
+import {Header} from '../component/header/header';
 
 @Component({
   selector: 'app-student-dashboard',

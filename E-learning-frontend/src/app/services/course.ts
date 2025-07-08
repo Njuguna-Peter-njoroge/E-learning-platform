@@ -99,4 +99,24 @@ export class CourseService {
     return this.http.get<{ fullName: string }[]>(`${this.apiUrl}/instructors`)
       .pipe(map(instructors => instructors.map(i => i.fullName)));
   }
+
+  // Get instructor's courses
+  getInstructorCourses(): Observable<Course[]> {
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    
+    return this.http.get<Course[]>(`${this.apiUrl}/instructor/my-courses`, { headers });
+  }
+
+  // Get instructor dashboard stats
+  getInstructorDashboardStats(): Observable<any> {
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    
+    return this.http.get<any>(`${this.apiUrl}/instructor/dashboard-stats`, { headers });
+  }
 }

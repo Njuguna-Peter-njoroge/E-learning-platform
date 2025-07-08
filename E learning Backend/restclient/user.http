@@ -9,10 +9,10 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "fullName": "New student",
-  "email": "student13@gmail.com",
+  "fullName": "instructor",
+  "email": "brianmwangiat033@gmail.com",
   "password": "password123",
-  "role": "STUDENT"
+  "role": "INSTRUCTOR"
 }
 
 ### Create an admin user
