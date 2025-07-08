@@ -15,12 +15,7 @@ Content-Type: application/json
 }
 
 ### Store the student token from the login response above
-# Replace STUDENT_JWT_TOKEN with the actual token from login response
-# Current token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
 
-# ========================================
-# STUDENT PROGRESS & TASKS
-# ========================================
 
 ### Get student's available tasks (requires STUDENT role)
 GET http://localhost:3000/progress/student/tasks

@@ -1,9 +1,4 @@
-# Lesson Creation API Tests
-# This file shows how to create courses, modules, and lessons
 
-# ========================================
-# AUTHENTICATION
-# ========================================
 
 ### Login as Admin
 POST http://localhost:3000/auth/login
@@ -236,19 +231,3 @@ Content-Type: application/json
   "title": "Incomplete Lesson"
 }
 
-# ========================================
-# USEFUL INFORMATION
-# ========================================
-
-# Admin Token: Get from admin login response
-# Instructor Token: Get from instructor login response
-# Student Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZTdhN2U2MC0wYmM5LTQxY2QtYmQ0Yi1kN2Q2MmE5OTZlNDYiLCJlbWFpbCI6ImpvaG4yM0BleGFtcGxlLmNvbSIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzUxODA4NjM2LCJleHAiOjE3NTE4OTUwMzZ9.lJ1fOfmU5eQf6IDYAnwcqGpO87Sa5s_19g-FEjJfO-g
-
-# Steps to create lessons:
-# 1. Login as admin/instructor to get token
-# 2. Create a course (if not exists) - get course ID from response
-# 3. Create modules for the course - get module ID from response  
-# 4. Create lessons within modules using module ID
-# 5. Replace TOKEN_HERE and ID_HERE with actual values
-# 
-# Flow: User ID → Course ID → Module ID → Lesson 

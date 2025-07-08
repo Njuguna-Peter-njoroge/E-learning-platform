@@ -315,4 +315,80 @@ export class ProgressService {
 
     return progress;
   }
+
+  // Get instructor's students progress
+  async getInstructorStudentsProgress(instructorId: string) {
+    // Get all courses by this instructor
+    const instructorCourses = await this.prisma.course.findMany({
+      where: { instructorId },
+      include: {
+        enrollments: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                fullName: true,
+                email: true
+              }
+            }
+          }
+        },
+        modules: {
+          include: {
+            lessons: true
+          }
+        }
+      }
+    });
+
+    const studentsProgress = [];
+
+    for (const course of instructorCourses) {
+      for (const enrollment of course.enrollments) {
+        const totalLessons = course.modules.reduce(
+          (sum, module) => sum + module.lessons.length, 0
+        );
+
+        if (totalLessons > 0) {
+          const completedLessons = await this.prisma.progress.count({
+            where: {
+              userId: enrollment.userId,
+              lessonId: {
+                in: course.modules.flatMap(m => m.lessons.map(l => l.id))
+              },
+              status: 'COMPLETED'
+            }
+          });
+
+          const progressPercentage = Math.round((completedLessons / totalLessons) * 100);
+
+          // Get last activity
+          const lastActivity = await this.prisma.progress.findFirst({
+            where: {
+              userId: enrollment.userId,
+              lessonId: {
+                in: course.modules.flatMap(m => m.lessons.map(l => l.id))
+              }
+            },
+            orderBy: { updatedAt: 'desc' },
+            select: { updatedAt: true }
+          });
+
+          studentsProgress.push({
+            studentId: enrollment.userId,
+            studentName: enrollment.user.fullName,
+            studentEmail: enrollment.user.email,
+            courseId: course.id,
+            courseTitle: course.title,
+            progressPercentage,
+            completedLessons,
+            totalLessons,
+            lastActivity: lastActivity?.updatedAt || enrollment.createdAt
+          });
+        }
+      }
+    }
+
+    return studentsProgress;
+  }
 }

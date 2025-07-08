@@ -6,8 +6,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "njugunahpeternjoroge@gmail.com",
-  "password": "Admin123!"
+  "email": "brianmwangiat033@gmail.com",
+  "password": "password123"
 }
 
 ### Store the token from the login response above

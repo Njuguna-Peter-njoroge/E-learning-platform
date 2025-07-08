@@ -82,25 +82,25 @@ export class MailerService {
             </head>
             <body>
                 <div class="container">
-                  <div class="header">
+                    <div class="header">
                     <h1>Welcome to E-Learning!</h1>
                     <img src="https://img.icons8.com/color/96/000000/graduation-cap.png" alt="Welcome" />
-                  </div>
-                  <div class="content">
+                    </div>
+                    <div class="content">
                     <h2>Hello ${name},</h2>
                     <p>We're thrilled to have you join our learning community! Your journey to new skills and knowledge starts now.</p>
                     <p>To activate your account, please use the verification code below:</p>
-                    <div class="otp-box">
+                        <div class="otp-box">
                       <div>Your verification code:</div>
-                      <div class="otp-code">${otpCode}</div>
-                    </div>
+                            <div class="otp-code">${otpCode}</div>
+                        </div>
                     <p>This code is valid for 10 minutes. If you did not sign up, you can safely ignore this email.</p>
                     <a class="cta" href="${baseUrl}/login">Go to E-Learning Platform</a>
-                  </div>
-                  <div class="footer">
+                    </div>
+                    <div class="footer">
                     &copy; ${new Date().getFullYear()} E-Learning Platform. <br>
                     Need help? Contact <a href="mailto:support@elearning.com">support@elearning.com</a>
-                  </div>
+                    </div>
                 </div>
             </body>
             </html>
@@ -137,24 +137,24 @@ export class MailerService {
             </head>
             <body>
                 <div class="container">
-                  <div class="header">
-                    <h1>Password Reset Request</h1>
+                    <div class="header">
+                        <h1>Password Reset Request</h1>
                     <img src="https://img.icons8.com/color/96/000000/lock-2.png" alt="Reset" />
-                  </div>
-                  <div class="content">
-                    <h2>Hello ${name},</h2>
-                    <p>We received a request to reset your password for your E-Learning Platform account.</p>
-                    <div class="otp-box">
-                      <div>Your reset code:</div>
-                      <div class="otp-code">${otpCode}</div>
                     </div>
+                    <div class="content">
+                    <h2>Hello ${name},</h2>
+                        <p>We received a request to reset your password for your E-Learning Platform account.</p>
+                        <div class="otp-box">
+                      <div>Your reset code:</div>
+                            <div class="otp-code">${otpCode}</div>
+                        </div>
                     <p>This code is valid for 10 minutes. If you did not request a password reset, you can safely ignore this email.</p>
                     <a class="cta" href="${baseUrl}/login">Go to E-Learning Platform</a>
-                  </div>
-                  <div class="footer">
+                    </div>
+                    <div class="footer">
                     &copy; ${new Date().getFullYear()} E-Learning Platform. <br>
                     Need help? Contact <a href="mailto:support@elearning.com">support@elearning.com</a>
-                  </div>
+                    </div>
                 </div>
             </body>
             </html>
@@ -190,24 +190,24 @@ export class MailerService {
             </head>
             <body>
                 <div class="container">
-                  <div class="header">
-                    <h1>Email Verification</h1>
+                    <div class="header">
+                        <h1>Email Verification</h1>
                     <img src="https://img.icons8.com/color/96/000000/secured-letter.png" alt="Verify" />
-                  </div>
-                  <div class="content">
-                    <h2>Hello ${name},</h2>
-                    <p>Please verify your email address to complete your registration.</p>
-                    <div class="otp-box">
-                      <div>Your verification code:</div>
-                      <div class="otp-code">${otpCode}</div>
                     </div>
+                    <div class="content">
+                    <h2>Hello ${name},</h2>
+                        <p>Please verify your email address to complete your registration.</p>
+                        <div class="otp-box">
+                      <div>Your verification code:</div>
+                            <div class="otp-code">${otpCode}</div>
+                        </div>
                     <p>This code is valid for 10 minutes. If you did not sign up, you can safely ignore this email.</p>
                     <a class="cta" href="${baseUrl}/login">Go to E-Learning Platform</a>
-                  </div>
-                  <div class="footer">
+                    </div>
+                    <div class="footer">
                     &copy; ${new Date().getFullYear()} E-Learning Platform. <br>
                     Need help? Contact <a href="mailto:support@elearning.com">support@elearning.com</a>
-                  </div>
+                    </div>
                 </div>
             </body>
             </html>
@@ -240,20 +240,20 @@ export class MailerService {
             </head>
             <body>
                 <div class="container">
-                  <div class="header">
-                    <h1>Course Enrollment Confirmation</h1>
+                    <div class="header">
+                        <h1>Course Enrollment Confirmation</h1>
                     <img src="https://img.icons8.com/color/96/000000/open-book--v2.png" alt="Enrolled" />
-                  </div>
-                  <div class="content">
+                    </div>
+                    <div class="content">
                     <h2>Hello ${name},</h2>
-                    <p>You have successfully enrolled in the course: <strong>${courseName}</strong></p>
-                    <p>You can now access your course materials and start learning!</p>
+                        <p>You have successfully enrolled in the course: <strong>${courseName}</strong></p>
+                        <p>You can now access your course materials and start learning!</p>
                     <a class="cta" href="${baseUrl}/courses">Go to My Courses</a>
-                  </div>
-                  <div class="footer">
+                    </div>
+                    <div class="footer">
                     &copy; ${new Date().getFullYear()} E-Learning Platform. <br>
                     Need help? Contact <a href="mailto:support@elearning.com">support@elearning.com</a>
-                  </div>
+                    </div>
                 </div>
             </body>
             </html>
@@ -286,21 +286,21 @@ export class MailerService {
             </head>
             <body>
                 <div class="container">
-                  <div class="header">
-                    <h1>🎉 Course Completion!</h1>
+                    <div class="header">
+                        <h1>🎉 Course Completion!</h1>
                     <img src="https://img.icons8.com/color/96/000000/certificate.png" alt="Completed" />
-                  </div>
-                  <div class="content">
-                    <h2>Congratulations ${name}!</h2>
-                    <p>You have successfully completed the course: <strong>${courseName}</strong></p>
-                    <p>Your certificate will be available in your dashboard shortly.</p>
-                    <p>Keep up the great work and continue learning!</p>
+                    </div>
+                    <div class="content">
+                        <h2>Congratulations ${name}!</h2>
+                        <p>You have successfully completed the course: <strong>${courseName}</strong></p>
+                        <p>Your certificate will be available in your dashboard shortly.</p>
+                        <p>Keep up the great work and continue learning!</p>
                     <a class="cta" href="${baseUrl}/dashboard">Go to Dashboard</a>
-                  </div>
-                  <div class="footer">
+                    </div>
+                    <div class="footer">
                     &copy; ${new Date().getFullYear()} E-Learning Platform. <br>
                     Need help? Contact <a href="mailto:support@elearning.com">support@elearning.com</a>
-                  </div>
+                    </div>
                 </div>
             </body>
             </html>

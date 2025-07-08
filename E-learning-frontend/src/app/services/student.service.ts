@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface Student {
   id: string;
@@ -72,16 +73,14 @@ export interface Certificate {
 })
 export class StudentService {
   private readonly apiUrl = 'http://localhost:3000';
-  private token: string | null = null;
 
-  constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('access_token');
-  }
+  constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('access_token');
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
+      'Authorization': `Bearer ${token}`
     });
   }
 
@@ -153,5 +152,50 @@ export class StudentService {
     return this.http.get<any>(`${this.apiUrl}/users/stats`, {
       headers: this.getHeaders()
     });
+  }
+
+  // Admin dashboard: Get all users
+  getAllUsers(): Observable<{ data: any[] }> {
+    return this.http.get<{ data: any[] }>(`${this.apiUrl}/users`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  // Admin dashboard: Get all courses
+  getAllCourses(): Observable<{ data: any[] }> {
+    return this.http.get<any>(`${this.apiUrl}/courses`, {
+      headers: this.getHeaders()
+    }).pipe(
+      map(response => {
+        // Handle both array and object with data property
+        if (Array.isArray(response)) {
+          return { data: response };
+        } else if (response && response.data) {
+          return response;
+        } else {
+          return { data: [] };
+        }
+      })
+    );
+  }
+
+  // Admin dashboard: Get all enrollments
+  getAllEnrollments(): Observable<any[]> {
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    
+    return this.http.get<any[]>(`${this.apiUrl}/enrollments`, { headers });
+  }
+
+  // Get instructor's students progress
+  getInstructorStudentsProgress(): Observable<any[]> {
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    
+    return this.http.get<any[]>(`${this.apiUrl}/progress/instructor/students-progress`, { headers });
   }
 }

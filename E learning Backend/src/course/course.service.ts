@@ -112,4 +112,97 @@ export class CourseService {
       where: { id },
     });
   }
+
+  // Get courses by instructor
+  async findByInstructor(instructorId: string) {
+    return this.prisma.course.findMany({
+      where: { instructorId },
+      include: {
+        instructor: true,
+        modules: {
+          include: {
+            lessons: true
+          }
+        },
+        enrollments: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                fullName: true,
+                email: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  }
+
+  // Get instructor dashboard stats
+  async getInstructorDashboardStats(instructorId: string) {
+    const courses = await this.prisma.course.findMany({
+      where: { instructorId },
+      include: {
+        modules: {
+          include: {
+            lessons: true
+          }
+        },
+        enrollments: {
+          include: {
+            user: true
+          }
+        }
+      }
+    });
+
+    const totalCourses = courses.length;
+    const activeCourses = courses.filter(c => c.status === 'PUBLISHED').length;
+    const draftCourses = courses.filter(c => c.status === 'DRAFT').length;
+    const totalStudents = courses.reduce((sum, course) => sum + course.enrollments.length, 0);
+    const totalLessons = courses.reduce((sum, course) => 
+      sum + course.modules.reduce((moduleSum, module) => 
+        moduleSum + module.lessons.length, 0), 0);
+
+    // Calculate average completion rate
+    let totalProgress = 0;
+    let progressCount = 0;
+
+    for (const course of courses) {
+      const totalCourseLessons = course.modules.reduce((sum, module) => 
+        sum + module.lessons.length, 0);
+      
+      if (totalCourseLessons > 0) {
+        for (const enrollment of course.enrollments) {
+          // Get completed lessons for this enrollment
+          const completedLessons = await this.prisma.progress.count({
+            where: {
+              userId: enrollment.userId,
+              lessonId: {
+                in: course.modules.flatMap(m => m.lessons.map(l => l.id))
+              },
+              status: 'COMPLETED'
+            }
+          });
+
+          const progressPercentage = (completedLessons / totalCourseLessons) * 100;
+          totalProgress += progressPercentage;
+          progressCount++;
+        }
+      }
+    }
+
+    const averageCompletionRate = progressCount > 0 ? Math.round(totalProgress / progressCount) : 0;
+
+    return {
+      totalCourses,
+      activeCourses,
+      draftCourses,
+      totalStudents,
+      totalLessons,
+      averageCompletionRate
+    };
+  }
 }

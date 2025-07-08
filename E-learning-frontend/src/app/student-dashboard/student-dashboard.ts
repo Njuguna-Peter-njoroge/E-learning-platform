@@ -30,6 +30,9 @@ export class StudentDashboardComponent implements OnInit {
   isEditingProfile = signal(false);
   selectedTask: StudentTask | null = null;
 
+  // Math object for template access
+  Math = Math;
+
   constructor(private studentService: StudentService) {}
 
   ngOnInit() {
@@ -154,33 +157,26 @@ export class StudentDashboardComponent implements OnInit {
     this.isEditingProfile.set(!this.isEditingProfile());
   }
 
-  updateProfile() {
-    if (!this.student()) return;
-
-    const profileData = {
-      fullName: this.student()?.fullName,
-      email: this.student()?.email
-    };
-
-    this.studentService.updateProfile(profileData).subscribe({
-      next: (updatedStudent) => {
-        this.student.set(updatedStudent);
-        this.isEditingProfile.set(false);
-      },
-      error: (err) => {
-        console.error('Error updating profile:', err);
-        this.error.set('Failed to update profile');
-      }
-    });
+  // Course actions
+  continueCourse(course: CourseProgress) {
+    if (course.progressPercentage === 100) {
+      // View certificate
+      console.log('View certificate for course:', course.course.title);
+    } else {
+      // Continue learning - navigate to course content
+      console.log('Continue learning course:', course.course.title);
+    }
   }
 
-  // Utility methods
-  getProgressColor(percentage: number): string {
-    if (percentage >= 80) return '#4CAF50';
-    if (percentage >= 60) return '#FF9800';
-    return '#F44336';
+  viewCourseDetails(course: CourseProgress) {
+    console.log('View course details:', course.course.title);
   }
 
+  browseCourses() {
+    console.log('Navigate to course browsing');
+  }
+
+  // Progress tracking methods
   getCourseCount(): number {
     return this.courseProgress().length;
   }
@@ -189,23 +185,67 @@ export class StudentDashboardComponent implements OnInit {
     return this.courseProgress().filter(course => course.progressPercentage === 100).length;
   }
 
-  getTotalCertificates(): number {
-    return this.certificates().length;
-  }
-
   getAvailableTasks(): number {
     return this.studentTasks().filter(task => task.canStart).length;
   }
 
-  // Date formatting
-  formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString();
+  getAverageProgress(): number {
+    const courses = this.courseProgress();
+    if (courses.length === 0) return 0;
+    
+    const totalProgress = courses.reduce((sum, course) => sum + course.progressPercentage, 0);
+    return Math.round(totalProgress / courses.length);
+  }
+
+  // Progress color methods
+  getProgressColor(percentage: number): string {
+    if (percentage >= 80) return '#4CAF50'; // Green
+    if (percentage >= 60) return '#FF9800'; // Orange
+    if (percentage >= 40) return '#FFC107'; // Yellow
+    return '#F44336'; // Red
+  }
+
+  getStatusClass(percentage: number): string {
+    if (percentage === 100) return 'status-completed';
+    if (percentage >= 80) return 'status-advanced';
+    if (percentage >= 50) return 'status-progress';
+    return 'status-beginner';
+  }
+
+  getStatusText(percentage: number): string {
+    if (percentage === 100) return 'Completed';
+    if (percentage >= 80) return 'Advanced';
+    if (percentage >= 50) return 'In Progress';
+    return 'Beginner';
+  }
+
+  // Task status methods
+  getTaskStatusClass(task: StudentTask): string {
+    if (task.currentProgress?.status === 'COMPLETED') return 'status-completed';
+    if (task.currentProgress?.status === 'IN_PROGRESS') return 'status-progress';
+    if (task.canStart) return 'status-available';
+    return 'status-locked';
+  }
+
+  getTaskStatusText(task: StudentTask): string {
+    if (task.currentProgress?.status === 'COMPLETED') return 'Completed';
+    if (task.currentProgress?.status === 'IN_PROGRESS') return 'In Progress';
+    if (task.canStart) return 'Available';
+    return 'Locked';
   }
 
   getCurrentDate(): string {
     return new Date().toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
       day: 'numeric'
     });
   }
