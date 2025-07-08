@@ -6,6 +6,10 @@ export class CreateEnrollmentDto {
   courseId: string;
 
   @IsOptional()
+  @IsUUID()
+  userId?: string; // <-- Allow admin to enroll specific user
+
+  @IsOptional()
   @IsEnum(EnrollmentStatus)
   status?: EnrollmentStatus = EnrollmentStatus.ENROLLED;
 }

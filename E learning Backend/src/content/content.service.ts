@@ -20,6 +20,7 @@ export class ContentService {
     if (!mod) throw new NotFoundException('Module not found');
     return mod;
   }
+  
 
   async update(id: string, dto: UpdateContentDto) {
     return this.prisma.module.update({

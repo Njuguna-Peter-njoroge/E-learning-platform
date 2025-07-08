@@ -17,8 +17,12 @@ import { StudentService } from '../../services/student.service';
         <h1 class="flex justify-center font-bold mt-4">11 hours left at this price</h1>
 
         <div class="flex justify-center mb-10">
+          <button class="bg-orange-600 text-white p-2 px-8 mt-6 border rounded-xl" routerLink="/enroll-course">
+            Enroll Now
+
           <button class="bg-orange-600 text-white p-2 px-8 mt-6 border rounded-xl" (click)="enrollInCourse()" [disabled]="enrolling">
             {{ enrolling ? 'Enrolling...' : 'Enroll now' }}
+ 
           </button>
         </div>
         <div *ngIf="enrollSuccess" class="text-green-600 text-center mb-4">Enrolled successfully! Check your dashboard.</div>

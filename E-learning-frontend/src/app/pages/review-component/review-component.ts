@@ -31,7 +31,7 @@ import { ActivatedRoute } from '@angular/router';
                   type="range"
                   [value]="getStarPercentage(star)"
                   disabled
-                  class="w-full accent-yellow-500"
+                  class="w-full accent-orange-600"
                 />
               </ng-container>
             </div>

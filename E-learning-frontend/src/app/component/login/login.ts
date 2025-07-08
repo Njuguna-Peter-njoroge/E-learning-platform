@@ -74,6 +74,9 @@ export class LoginComponent {
       this.authService.login({ email, password }).subscribe({
         next: (res) => {
           console.log('Login successful', res);
+          localStorage.setItem('access_token', res.access_token);
+ 
+          this.router.navigate(['/courses']); 
           
           // Store the token (handle both access_token and token properties)
           const token = res.access_token || res.token;

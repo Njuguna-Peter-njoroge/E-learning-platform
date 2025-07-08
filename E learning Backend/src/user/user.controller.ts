@@ -36,7 +36,7 @@ export class UserController {
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.INSTRUCTOR)
+  @Roles(Role.ADMIN, Role.INSTRUCTOR,Role.STUDENT)
   findAll(@Query() filters: UserFiltersDto) {
     if (filters.status || filters.role || filters.isVerified || filters.search) {
       return this.userService.findWithFilters(filters);
