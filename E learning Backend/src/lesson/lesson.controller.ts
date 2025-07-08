@@ -8,12 +8,12 @@ import { Roles } from '../auth/decorators/roles.decorators';
 import { Role } from '@prisma/client';
 
 @Controller('lessons')
-@UseGuards(JwtAuthGuard, RolesGuard)
+ @UseGuards(JwtAuthGuard, RolesGuard)
 export class LessonController {
   constructor(private readonly lessonService: LessonService) {}
 
   @Post()
-  @Roles(Role.ADMIN, Role.INSTRUCTOR)
+   @Roles(Role.ADMIN, Role.INSTRUCTOR)
   create(@Body() dto: CreateLessonDto) {
     return this.lessonService.create(dto);
   }

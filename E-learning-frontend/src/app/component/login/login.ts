@@ -68,7 +68,8 @@ export class LoginComponent {
       this.authService.login({ email, password }).subscribe({
         next: (res) => {
           console.log('Login successful', res);
-          localStorage.setItem('access_token', res.accessToken); 
+          localStorage.setItem('access_token', res.access_token);
+ 
           this.router.navigate(['/courses']); 
         },
         error: (err) => {

@@ -13,13 +13,14 @@ import { EnrollmentService } from './enrollment.service';
 import { CreateEnrollmentDto } from './dtos/create-enrollment.dto'; 
 import { UpdateEnrollmentDto } from './dtos/update-enrollment.dto'; 
 import { JwtAuthGuard } from '../auth/Guards/auth.guards';
+import { Roles } from 'src/auth/decorators/roles.decorators';
 
 @Controller('enrollments')
 export class EnrollmentController {
   constructor(private readonly enrollmentService: EnrollmentService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+   @UseGuards(JwtAuthGuard)
   create(@Body() dto: CreateEnrollmentDto, @Request() req) {
     const userId = req.user.id;
     return this.enrollmentService.create(dto, userId);

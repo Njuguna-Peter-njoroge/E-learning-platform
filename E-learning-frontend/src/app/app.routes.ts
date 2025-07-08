@@ -12,6 +12,8 @@ import { RegisterComponent } from './component/register/register';
 import { VerifyEmailComponent } from './pages/verify-email/verify-email';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password';
+import { EnrollmentComponent } from './pages/enrollment/enrollment';
+import { LessonViewComponent } from './components/lesson-view';
 
 
 export const routes: Routes = [
@@ -77,7 +79,16 @@ export const routes: Routes = [
       {
         path: 'reset-password',
         component: ResetPasswordComponent
+      },
+      {
+        path: 'enroll-course',
+        component: EnrollmentComponent
+      },
+      {
+        path: 'courses/:courseId/lessons',
+        component: LessonViewComponent
       }
+      
     
     
   
