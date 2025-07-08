@@ -140,11 +140,11 @@ export class EnrollmentComponent implements OnInit {
 
     this.userService.findAll().subscribe({
       next: (res: any) => {
-        console.log('✅ Users fetched:', res);
-        this.users = res.data; // ✅ this is now the array of users
+        console.log(' Users fetched:', res);
+        this.users = res.data; 
       },
       error: (err: HttpErrorResponse) => {
-        alert('❌ Failed to load users: ' + err.message);
+        alert(' Failed to load users: ' + err.message);
       }
     });
     
@@ -163,12 +163,12 @@ export class EnrollmentComponent implements OnInit {
     );
   
     if (!course) {
-      alert(`❌ Course "${this.selectedCourseName}" not found.`);
+      alert(` Course "${this.selectedCourseName}" not found.`);
       return;
     }
   
     if (!user) {
-      alert(`❌ User "${this.selectedUserName}" not found.`);
+      alert(` User "${this.selectedUserName}" not found.`);
       return;
     }
   
@@ -178,7 +178,7 @@ export class EnrollmentComponent implements OnInit {
     );
   
     if (alreadyEnrolled) {
-      alert(`⚠️ ${user.fullName} is already enrolled in "${course.title}".`);
+      alert(` ${user.fullName} is already enrolled in "${course.title}".`);
       return;
     }
   
@@ -189,14 +189,14 @@ export class EnrollmentComponent implements OnInit {
   
     this.enrollmentService.create(dto).subscribe({
       next: () => {
-        alert(`✅ ${user.fullName} successfully enrolled in "${course.title}"`);
+        alert(` ${user.fullName} successfully enrolled in "${course.title}"`);
         this.selectedCourseName = '';
         this.selectedUserName = '';
         this.loadAll();
-        this.router.navigate(['/courses', course.id, 'lessons']); // ✅ use course.id
+        this.router.navigate(['/courses', course.id, 'lessons']); 
       },
       error: (err: HttpErrorResponse) =>
-        alert('⚠️ Failed to enroll: ' + err.message)
+        alert(' Failed to enroll: ' + err.message)
     });
     
   }
@@ -207,7 +207,7 @@ export class EnrollmentComponent implements OnInit {
 
     this.enrollmentService.remove(id).subscribe({
       next: () => this.loadAll(),
-      error: (err: HttpErrorResponse) => alert('⚠️ Failed to delete enrollment: ' + err.message)
+      error: (err: HttpErrorResponse) => alert(' Failed to delete enrollment: ' + err.message)
     });
   }
 
@@ -226,7 +226,7 @@ export class EnrollmentComponent implements OnInit {
         this.editingId = null;
         this.loadAll();
       },
-      error: (err: HttpErrorResponse) => alert('⚠️ Failed to update enrollment: ' + err.message)
+      error: (err: HttpErrorResponse) => alert(' Failed to update enrollment: ' + err.message)
     });
   }
 
