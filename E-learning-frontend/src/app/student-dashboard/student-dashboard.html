@@ -1,5 +1,3 @@
-
-<app-header></app-header>
 <div class="dashboard-grid">
   <!-- Main Content -->
   <div class="dashboard-main">
@@ -11,29 +9,6 @@
         <p class="subtitle">Always stay updated in your student portal</p>
       </div>
       <img src="assets/images/hero-girl_image-removebg-preview.png" alt="Welcome Illustration" class="banner-illustration" />
-    </div>
-
-    <!-- Progress Overview Section -->
-    <div class="progress-overview-section">
-      <h3>Your Progress Overview</h3>
-      <div class="progress-stats">
-        <div class="stat-item">
-          <div class="stat-number">{{ getCourseCount() }}</div>
-          <div class="stat-label">Enrolled Courses</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">{{ getCompletedCourses() }}</div>
-          <div class="stat-label">Completed Courses</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">{{ getAvailableTasks() }}</div>
-          <div class="stat-label">Available Tasks</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">{{ getAverageProgress() }}%</div>
-          <div class="stat-label">Average Progress</div>
-        </div>
-      </div>
     </div>
 
     <!-- Finance Section -->
@@ -58,120 +33,26 @@
       </div>
     </div>
 
-    <!-- Enrolled Courses Section with Progress -->
+    <!-- Enrolled Courses Section -->
     <div class="enrolled-courses-section">
       <div class="courses-header">
-        <h3>Your Enrolled Courses</h3>
+        <h3>Enrolled Courses</h3>
         <a class="see-all" href="#">See all</a>
       </div>
       <div class="courses-list">
         <ng-container *ngIf="courseProgress()?.length; else noCourses">
           <div class="course-card" *ngFor="let course of courseProgress(); let i = index">
-            <div class="course-header">
-              <div class="course-icon">
-                <!-- Course icon placeholder -->
-                <div class="course-icon-placeholder">📚</div>
-              </div>
-              <div class="course-info">
-                <div class="course-title">{{ course.course.title }}</div>
-                <div class="course-instructor">by {{ course.course.instructor.fullName || 'Unknown Instructor' }}</div>
-                <div class="course-level">{{ course.course.level }} • {{ course.course.category }}</div>
-              </div>
-              <div class="course-status">
-                <span class="status-badge" [class]="getStatusClass(course.progressPercentage)">
-                  {{ getStatusText(course.progressPercentage) }}
-                </span>
-              </div>
+            <div class="course-icon">
+              <!-- Example: <img src="assets/images/laptop.png" alt="Course Icon" /> -->
             </div>
-            
-            <div class="course-progress">
-              <div class="progress-header">
-                <span class="progress-label">Course Progress</span>
-                <span class="progress-percentage">{{ Math.round(course.progressPercentage) }}%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" 
-                     [style.width.%]="course.progressPercentage"
-                     [style.background-color]="getProgressColor(course.progressPercentage)">
-                </div>
-              </div>
-              <div class="progress-details">
-                <span>{{ course.completedLessons }} of {{ course.totalLessons }} lessons completed</span>
-              </div>
-            </div>
-
-            <div class="course-actions">
-              <button class="btn-primary" (click)="continueCourse(course)">
-                {{ course.progressPercentage === 100 ? 'View Certificate' : 'Continue Learning' }}
-              </button>
-              <button class="btn-secondary" (click)="viewCourseDetails(course)">
-                Course Details
-              </button>
-            </div>
+            <div class="course-title">{{ course.course.title }}</div>
+            <div class="course-description">{{ course.course.description }}</div>
+            <button class="view-btn">View</button>
           </div>
         </ng-container>
         <ng-template #noCourses>
-          <div class="no-courses">
-            <div class="no-courses-icon">📚</div>
-            <h4>No courses enrolled yet</h4>
-            <p>Start your learning journey by enrolling in a course!</p>
-            <button class="btn-primary" (click)="browseCourses()">Browse Courses</button>
-          </div>
+          <div class="no-courses">You are not enrolled in any courses yet.</div>
         </ng-template>
-      </div>
-    </div>
-
-    <!-- Recent Tasks Section -->
-    <div class="recent-tasks-section" *ngIf="studentTasks()?.length">
-      <div class="section-header">
-        <h3>Recent Tasks</h3>
-        <a class="see-all" href="#">View all tasks</a>
-      </div>
-      <div class="tasks-list">
-        <div class="task-card" *ngFor="let task of studentTasks().slice(0, 3)">
-          <div class="task-header">
-            <div class="task-title">{{ task.lesson.title }}</div>
-            <div class="task-status" [class]="getTaskStatusClass(task)">
-              {{ getTaskStatusText(task) }}
-            </div>
-          </div>
-          <div class="task-course">{{ task.course.title }} • {{ task.module.title }}</div>
-          <div class="task-actions">
-            <button class="btn-small" 
-                    [class.btn-primary]="task.canStart"
-                    [class.btn-disabled]="!task.canStart"
-                    (click)="startTask(task)"
-                    *ngIf="!task.currentProgress">
-              Start Task
-            </button>
-            <button class="btn-small btn-success" 
-                    (click)="completeTask(task)"
-                    *ngIf="task.currentProgress && task.currentProgress.status === 'IN_PROGRESS'">
-              Complete Task
-            </button>
-            <span class="task-completed" *ngIf="task.currentProgress && task.currentProgress.status === 'COMPLETED'">
-              ✓ Completed
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Certificates Section -->
-    <div class="certificates-section" *ngIf="certificates()?.length">
-      <div class="section-header">
-        <h3>Your Certificates</h3>
-        <a class="see-all" href="#">View all certificates</a>
-      </div>
-      <div class="certificates-list">
-        <div class="certificate-card" *ngFor="let cert of certificates()">
-          <div class="certificate-icon">🏆</div>
-          <div class="certificate-info">
-            <div class="certificate-title">{{ cert.course.title }}</div>
-            <div class="certificate-date">Issued: {{ formatDate(cert.issuedAt) }}</div>
-          </div>
-          <button class="btn-secondary">Download</button>
-        </div>
       </div>
     </div>
   </div>

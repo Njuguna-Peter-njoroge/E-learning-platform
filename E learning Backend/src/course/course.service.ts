@@ -26,7 +26,6 @@ export class CourseService {
     }
 
     // Ensure the authenticated user is the same as the instructor or is an admin
-
     if (userId !== instructor.id && instructor.role !== 'ADMIN') {
       throw new ForbiddenException('You can only create courses for your own account');
 

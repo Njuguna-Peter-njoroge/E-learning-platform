@@ -8,9 +8,24 @@ import { Subscription } from 'rxjs';
   selector: 'app-header',
   imports: [RouterLink, CommonModule],
   template: `
+<<<<<<< HEAD
     <div class="flex justify-between items-center bg-white shadow-sm px-6 py-4">
       <div class="flex items-center">
         <h1 class="font-bold text-2xl text-orange-600">SB</h1>
+=======
+    <div class="flex  justify-between">
+      <div class=" ml-20">
+        <h1 class="pt-5 font-bold text-xl">SB</h1>
+      </div>
+      <div class="flex justify-around  mr-[300px] text-black-800 ">
+        <button class="p-5" routerLink="/home">Home</button>
+        <button class="p-5" routerLink="/courses">Courses</button>
+        <button class="p-5" routerLink="/dashboard">DashBoard </button>
+        <button class="p-5" routerLink="/contact">Contact Us</button>
+        <button class="p-5" routerLink="/about">About Us</button>
+
+        <button class="pl-20 p-5" routerLink="/login">Login</button>
+>>>>>>> f8e3443ac87f9bd6301d4b167bbf753769bc44b4
       </div>
       
       <div class="flex items-center space-x-6">

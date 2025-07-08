@@ -10,8 +10,18 @@ import {AuthModule} from "../auth/auth.module";
 
 // import { AuthModule } from 'src/auth/auth.module';
 
+// @Module({
+  // imports: [PrismaModule,AuthModule],
+// import { AuthModule } from 'src/auth/auth.module';
+
+
+// @Module({
+//   imports: [PrismaModule, AuthModule],
+
+
+
 @Module({
-  imports: [PrismaModule,AuthModule],
+  imports: [PrismaModule,AuthModule], 
   controllers: [ReviewController],
   providers: [ReviewService],
 })
