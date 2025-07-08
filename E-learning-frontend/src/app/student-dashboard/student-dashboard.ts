@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { StudentService, Student, CourseProgress, StudentTask, Certificate } from '../services/student.service';
 import {Header} from '../component/header/header';
+import {Quiz, QuizQuestion, QuizTakeComponent} from '../pages/quiz-take/quiz-take';
 
 @Component({
   selector: 'app-student-dashboard',
   templateUrl: './student-dashboard.html',
   styleUrls: ['./student-dashboard.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, Header]
+  imports: [CommonModule, FormsModule, HttpClientModule, Header, QuizTakeComponent]
 })
 export class StudentDashboardComponent implements OnInit {
   // Student data
@@ -29,6 +30,9 @@ export class StudentDashboardComponent implements OnInit {
   activeTab = signal('overview');
   isEditingProfile = signal(false);
   selectedTask: StudentTask | null = null;
+  viewingCourse: any = null;
+  viewingLessons: any[] = [];
+  activeQuiz: Quiz | null = null;
 
   constructor(private studentService: StudentService) {}
 
@@ -172,6 +176,26 @@ export class StudentDashboardComponent implements OnInit {
         this.error.set('Failed to update profile');
       }
     });
+  }
+
+  // Add this method to handle viewing a course
+  viewCourse(course: any) {
+    this.viewingCourse = course;
+    // For demo, assume course.lessons is available; otherwise, fetch lessons from backend
+    this.viewingLessons = course.course.lessons || [];
+    this.activeQuiz = null;
+  }
+
+  // Add this method to handle launching a quiz
+  beginQuiz(quiz: Quiz) {
+    this.activeQuiz = quiz;
+  }
+
+  // Handle quiz submission
+  onQuizSubmitted(answers: any) {
+    // TODO: Send answers to backend, update progress, show feedback
+    this.activeQuiz = null;
+    this.loadDashboardData();
   }
 
   // Utility methods

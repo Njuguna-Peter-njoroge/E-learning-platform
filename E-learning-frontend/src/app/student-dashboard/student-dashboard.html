@@ -47,7 +47,7 @@
             </div>
             <div class="course-title">{{ course.course.title }}</div>
             <div class="course-description">{{ course.course.description }}</div>
-            <button class="view-btn">View</button>
+            <button class="view-btn" (click)="viewCourse(course)">View</button>
           </div>
         </ng-container>
         <ng-template #noCourses>
@@ -55,5 +55,43 @@
         </ng-template>
       </div>
     </div>
+
+    <!-- Available Courses Section -->
+    <div class="available-courses-section">
+      <div class="courses-header">
+        <h3>Available Courses</h3>
+      </div>
+      <div class="courses-list">
+        <ng-container *ngIf="availableCourses()?.length; else noAvailable">
+          <div class="course-card" *ngFor="let course of availableCourses()">
+            <div class="course-title">{{ course.title }}</div>
+            <div class="course-description">{{ course.description }}</div>
+            <button class="enroll-btn" (click)="enrollInCourse(course.id)">Enroll</button>
+          </div>
+        </ng-container>
+        <ng-template #noAvailable>
+          <div class="no-courses">No available courses to enroll.</div>
+        </ng-template>
+      </div>
+    </div>
   </div>
 </div>
+
+<!-- Modal or section for viewing lessons and quizzes -->
+<div *ngIf="viewingCourse" class="modal-overlay">
+  <div class="modal-content">
+    <h3 class="text-xl font-bold mb-2">{{ viewingCourse.course.title }} - Lessons</h3>
+    <ul>
+      <li *ngFor="let lesson of viewingLessons">
+        <div class="font-semibold">{{ lesson.title }}</div>
+        <div>{{ lesson.content }}</div>
+        <!-- If lesson.quiz exists, show Begin Quiz button -->
+        <button *ngIf="lesson.quiz" class="quiz-btn" (click)="beginQuiz(lesson.quiz)">Begin Quiz</button>
+      </li>
+    </ul>
+    <button class="close-btn" (click)="viewingCourse = null">Close</button>
+  </div>
+</div>
+
+<!-- Quiz taking component -->
+<app-quiz-take *ngIf="activeQuiz" [quiz]="activeQuiz" (quizSubmitted)="onQuizSubmitted($event)"></app-quiz-take>

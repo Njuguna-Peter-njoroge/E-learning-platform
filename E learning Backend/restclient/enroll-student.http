@@ -1,0 +1,8 @@
+### Enroll a student by email (dev helper)
+POST http://localhost:3000/enrollments/dev/enroll-by-email
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "courseId": "COURSE_ID_HERE"
+} 

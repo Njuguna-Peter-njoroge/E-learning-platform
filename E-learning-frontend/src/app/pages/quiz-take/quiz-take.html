@@ -1,0 +1,23 @@
+<app-header></app-header>
+<div class="max-w-2xl mx-auto mt-10">
+  <h1 class="text-3xl font-bold mb-6">Assigned Quizzes</h1>
+  <div *ngIf="isLoading" class="text-center py-10">Loading quizzes...</div>
+  <div *ngIf="error && !isLoading" class="text-red-600 text-center py-10">{{ error }}</div>
+  <div *ngIf="!isLoading && quizzes.length > 0">
+    <div *ngIf="!selectedQuiz">
+      <ul class="mb-6">
+        <li *ngFor="let quiz of quizzes" class="mb-2 flex items-center justify-between bg-white rounded shadow p-4">
+          <span class="font-semibold">{{ quiz.title }}</span>
+          <button class="bg-orange-600 text-white px-4 py-1 rounded" (click)="selectQuiz(quiz)">Take Quiz</button>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="selectedQuiz">
+      <app-quiz-take [quiz]="selectedQuiz" (quizSubmitted)="onQuizSubmitted()"></app-quiz-take>
+      <button class="mt-4 text-blue-600 underline" (click)="selectedQuiz = null">Back to Quiz List</button>
+    </div>
+  </div>
+  <div *ngIf="!isLoading && quizzes.length === 0 && !error" class="text-gray-600 text-center py-10">
+    No quizzes assigned for this course yet.
+  </div>
+</div> 

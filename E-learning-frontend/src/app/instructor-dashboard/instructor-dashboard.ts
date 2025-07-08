@@ -28,6 +28,16 @@ interface InstructorCourse {
   averageProgress: number;
   totalLessons?: number;
   createdAt: string;
+  enrollments?: {
+    user: {
+      id: string;
+      fullName: string;
+      email: string;
+    };
+    userId: string;
+    enrolledAt?: string;
+    status?: string;
+  }[];
 }
 
 interface StudentProgress {
@@ -41,6 +51,7 @@ interface StudentProgress {
   totalLessons: number;
   lastActivity: string;
   enrollmentDate?: string;
+  quizScore?: number; // Optional quiz score for progress table
 }
 
 @Component({

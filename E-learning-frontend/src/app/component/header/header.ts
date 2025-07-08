@@ -8,60 +8,155 @@ import { Subscription } from 'rxjs';
   selector: 'app-header',
   imports: [RouterLink, CommonModule],
   template: `
-<<<<<<< HEAD
-    <div class="flex justify-between items-center bg-white shadow-sm px-6 py-4">
-      <div class="flex items-center">
-        <h1 class="font-bold text-2xl text-orange-600">SB</h1>
-=======
-    <div class="flex  justify-between">
-      <div class=" ml-20">
-        <h1 class="pt-5 font-bold text-xl">SB</h1>
+    <nav class="navbar">
+      <div class="navbar-left">
+        <h1 class="logo">SB</h1>
       </div>
-      <div class="flex justify-around  mr-[300px] text-black-800 ">
-        <button class="p-5" routerLink="/home">Home</button>
-        <button class="p-5" routerLink="/courses">Courses</button>
-        <button class="p-5" routerLink="/dashboard">DashBoard </button>
-        <button class="p-5" routerLink="/contact">Contact Us</button>
-        <button class="p-5" routerLink="/about">About Us</button>
-
-        <button class="pl-20 p-5" routerLink="/login">Login</button>
->>>>>>> f8e3443ac87f9bd6301d4b167bbf753769bc44b4
+      <div class="navbar-center">
+        <button class="nav-link" routerLink="/home">Home</button>
+        <button class="nav-link" routerLink="/courses">Courses</button>
+        <button *ngIf="isLoggedIn && isAdmin()" class="nav-link" routerLink="/admindashboard">Admin Dashboard</button>
+        <button *ngIf="isLoggedIn && isInstructor()" class="nav-link" routerLink="/instructor-dashboard">Instructor Dashboard</button>
+        <button *ngIf="isLoggedIn && isStudent()" class="nav-link" routerLink="/dashboard">Student Dashboard</button>
+        <button class="nav-link" routerLink="/contact">Contact Us</button>
+        <button class="nav-link" routerLink="/about">About Us</button>
       </div>
-      
-      <div class="flex items-center space-x-6">
-        <button class="px-4 py-2 text-gray-700 hover:text-orange-600 transition-colors" routerLink="/home">Home</button>
-        <button class="px-4 py-2 text-gray-700 hover:text-orange-600 transition-colors" routerLink="/courses">Courses</button>
-        
-        <!-- Role-based dashboard links -->
-        <button *ngIf="isLoggedIn && isAdmin()" class="px-4 py-2 text-gray-700 hover:text-orange-600 transition-colors" routerLink="/admindashboard">Admin Dashboard</button>
-        <button *ngIf="isLoggedIn && isInstructor()" class="px-4 py-2 text-gray-700 hover:text-orange-600 transition-colors" routerLink="/instructor-dashboard">Instructor Dashboard</button>
-        <button *ngIf="isLoggedIn && isStudent()" class="px-4 py-2 text-gray-700 hover:text-orange-600 transition-colors" routerLink="/dashboard">Student Dashboard</button>
-        
-        <button class="px-4 py-2 text-gray-700 hover:text-orange-600 transition-colors" routerLink="/contact">Contact Us</button>
-        <button class="px-4 py-2 text-gray-700 hover:text-orange-600 transition-colors" routerLink="/about">About Us</button>
-        
-        <div class="flex items-center space-x-4 ml-6">
-          <!-- Show Login/Register buttons when NOT logged in -->
-          <div *ngIf="!isLoggedIn" class="flex items-center space-x-4">
-            <button class="px-4 py-2 text-gray-700 hover:text-orange-600 transition-colors" routerLink="/login">Login</button>
-            <button class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors" routerLink="/register">Register</button>
-          </div>
-          
-          <!-- Show User info and Logout when logged in -->
-          <div *ngIf="isLoggedIn" class="flex items-center space-x-4">
-            <span class="text-gray-700">{{ userEmail }}</span>
-            <button 
-              (click)="logout()" 
-              class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-            >
-              Logout
-            </button>
-          </div>
+      <div class="navbar-right">
+        <!-- Show Login/Register buttons when NOT logged in -->
+        <div *ngIf="!isLoggedIn" class="auth-buttons">
+          <button class="nav-link" routerLink="/login">Login</button>
+          <button class="register-btn" routerLink="/register">Register</button>
+        </div>
+        <!-- Show User info and Logout when logged in -->
+        <div *ngIf="isLoggedIn" class="user-info">
+          <span class="user-email">{{ userEmail }}</span>
+          <button (click)="logout()" class="logout-btn">Logout</button>
         </div>
       </div>
-    </div>
+    </nav>
   `,
-  styles: ``
+  styles: [
+    `
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      padding: 0 2rem;
+      min-height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-left .logo {
+      font-weight: bold;
+      font-size: 2rem;
+      color: #ff9800;
+      letter-spacing: 2px;
+      margin-right: 2rem;
+    }
+    .navbar-center {
+      display: flex;
+      gap: 1rem;
+      flex: 1;
+      justify-content: center;
+    }
+    .nav-link {
+      background: none;
+      border: none;
+      color: #333;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.75rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-link:hover, .nav-link:focus {
+      background: #fff3e0;
+      color: #ff9800;
+      outline: none;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .auth-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .register-btn {
+      background: #ff9800;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .register-btn:hover {
+      background: #fb8c00;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .user-email {
+      color: #333;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    .logout-btn {
+      background: #e53935;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.1rem;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .logout-btn:hover {
+      background: #b71c1c;
+    }
+    @media (max-width: 900px) {
+      .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0 1rem;
+      }
+      .navbar-center {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: flex-start;
+        margin: 0.5rem 0;
+      }
+      .navbar-right {
+        justify-content: flex-end;
+      }
+    }
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        padding: 0 0.5rem;
+      }
+      .navbar-center {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+      }
+      .navbar-right {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5rem;
+      }
+    }
+    `
+  ]
 })
 export class Header implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
@@ -75,7 +170,6 @@ export class Header implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.checkLoginStatus();
-    
     // Subscribe to login status changes
     this.subscription = this.authService.loginStatus$.subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;

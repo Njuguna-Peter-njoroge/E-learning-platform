@@ -341,7 +341,7 @@ export class ProgressService {
       }
     });
 
-    const studentsProgress = [];
+    const studentsProgress: any[] = [];
 
     for (const course of instructorCourses) {
       for (const enrollment of course.enrollments) {
@@ -370,8 +370,8 @@ export class ProgressService {
                 in: course.modules.flatMap(m => m.lessons.map(l => l.id))
               }
             },
-            orderBy: { updatedAt: 'desc' },
-            select: { updatedAt: true }
+            orderBy: { completedAt: 'desc' },
+            select: { completedAt: true }
           });
 
           studentsProgress.push({
@@ -383,7 +383,7 @@ export class ProgressService {
             progressPercentage,
             completedLessons,
             totalLessons,
-            lastActivity: lastActivity?.updatedAt || enrollment.createdAt
+            lastActivity: lastActivity?.completedAt || enrollment.enrolledAt
           });
         }
       }

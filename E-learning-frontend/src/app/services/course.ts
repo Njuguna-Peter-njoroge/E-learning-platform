@@ -16,6 +16,17 @@ export enum Difficulty {
 }
 
 
+export interface Enrollment {
+  user: {
+    id: string;
+    fullName: string;
+    email: string;
+  };
+  userId: string;
+  enrolledAt?: string;
+  status?: string;
+}
+
 export interface Course {
   id: string;
   iconImage: string;
@@ -28,6 +39,7 @@ export interface Course {
   instructor?: {
     fullName: string;
   };
+  enrollments?: Enrollment[];
   createdAt?: string;
   updatedAt?: string;
 }

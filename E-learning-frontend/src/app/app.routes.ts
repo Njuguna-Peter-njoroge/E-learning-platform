@@ -12,102 +12,31 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { ResetPasswordComponent } from './pages/reset-password/reset-password';
 import { EnrollmentComponent } from './pages/enrollment/enrollment';
 import { LessonViewComponent } from './components/lesson-view';
-
-
-export const routes: Routes = [
-    {
-        path: '',
-        pathMatch :'full',
-        component:HOME
-    },
-    {
-        path: 'home',
-        component:HOME
-    },
-    {
-        path: 'courses',
-        component:Courses
-    },
-    {
-
-        path: 'dashboard',
-        component:StudentDashboardComponent
-    },
-    {
-        path: 'contact',
-        component:ContactComponent
-    },
-    {
-        path: 'about',
-        component:AboutComponent
-    },
-    {
-        path: 'login',
-        component:LoginComponent
-    },
-  {     
-
-        path: 'course-details/:id',
-        component: CourseDetails,
-      },
-      // {
-//         path: 'course-details/:id',
-//         component: CourseDetails
-//       },
-      {
-        path: 'login',
-        component: LoginComponent
-      },
-      {
-        path: 'tlogin',
-        component: LoginComponent
-      },
-      {
-        path: 'tregister',
-        component: RegisterComponent
-      },
-      {
-        path: 'verify-email',
-        component: VerifyEmailComponent
-      },
-      {
-        path: 'forgot-password',
-        component: ForgotPasswordComponent
-      },
-      {
-        path: 'reset-password',
-        component: ResetPasswordComponent
-      },
-      {
-        path: 'enroll-course',
-        component: EnrollmentComponent
-      },
-      {
-        path: 'courses/:courseId/lessons',
-        component: LessonViewComponent
-      }
-      
-    
-    
-
 import { AdminDashboardComponent } from './Components/admindashboard/admindashboard';
 import { InstructorDashboardComponent } from './instructor-dashboard/instructor-dashboard';
+import { CourseCreateComponent } from './pages/course-create/course-create';
+import { QuizTakePageComponent } from './pages/quiz-take/quiz-take';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: HOME },
   { path: 'home', component: HOME },
   { path: 'courses', component: Courses },
+  { path: 'courses/create', component: CourseCreateComponent },
   { path: 'dashboard', component: StudentDashboardComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'about', component: AboutComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'course-details/:id', component: CourseDetails },
+  { path: 'courses/:id', component: CourseDetails },
   { path: 'admindashboard', component: AdminDashboardComponent },
   { path: 'instructor-dashboard', component: InstructorDashboardComponent },
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'tlogin', component: LoginComponent },
-  { path: 'tregister', component: RegisterComponent }
+  { path: 'tregister', component: RegisterComponent },
+  { path: 'enroll-course', component: EnrollmentComponent },
+  { path: 'courses/:courseId/lessons', component: LessonViewComponent },
+  { path: 'courses/:courseId/quizzes', component: QuizTakePageComponent }
 ];

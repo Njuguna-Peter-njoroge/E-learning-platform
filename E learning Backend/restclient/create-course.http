@@ -1,0 +1,14 @@
+### Create a new course (as instructor/admin)
+POST http://localhost:3000/courses
+Authorization: Bearer {{INSTRUCTOR_TOKEN}}
+Content-Type: application/json
+
+{
+  "iconImage": "https://example.com/icon.png",
+  "title": "Test Course for Enrollment",
+  "description": "A course to test student enrollment.",
+  "level": "BEGINNER",
+  "category": "Testing",
+  "status": "PUBLISHED",
+  "instructorName": "{{INSTRUCTOR_ID}}"
+} 
