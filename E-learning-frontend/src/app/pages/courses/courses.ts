@@ -2,7 +2,7 @@ import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Header } from '../../component/header/header';
 import { CourseCard } from '../course-card/course-card';
-import { CourseService, Course  } from '../../services/course'; 
+import { CourseService, Course  } from '../../services/course';
 
 @Component({
   selector: 'app-courses',
@@ -36,7 +36,6 @@ import { CourseService, Course  } from '../../services/course';
           <p class="mt-4 mb-6">in patnership with microsoft,amazon ,meta,openAi, freecode camp and us have been able to intoduce this course </p>
           <span class="flex justify-between p-4">
             <a href="https://www.freecodecamp.org/news/introduction-to-html-basics/">view</a>
-            <h2>$80</h2>
           </span>
         </div>
         <div>
@@ -45,7 +44,6 @@ import { CourseService, Course  } from '../../services/course';
           <p class="mt-4 mb-6">in patnership with microsoft,amazon ,meta,openAi, freecode camp and us have been able to intoduce this course </p>
           <span class="flex justify-between p-3">
             <a href="https://www.freecodecamp.org/news/introduction-to-html-basics/">view</a>
-            <h2>$80</h2>
           </span>
         </div>
         <div class="ml-4 mr-4 ">
@@ -54,7 +52,6 @@ import { CourseService, Course  } from '../../services/course';
           <p class="mt-4 mb-6">in patnership with microsoft,amazon ,meta,openAi, freecode camp and us have been able to intoduce this course </p>
           <span class="flex justify-between p-4">
             <a href="https://www.freecodecamp.org/news/introduction-to-html-basics/">view</a>
-            <h2>$80</h2>
           </span>
         </div>
       </div>

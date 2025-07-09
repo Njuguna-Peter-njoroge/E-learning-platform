@@ -6,10 +6,10 @@ import { Component } from '@angular/core';
   template: `
     <div class="mt-20">
       <div class="text-center">
-        <h1 class="text-2xl ">Our Success </h1>
-        <p class="mt-10">We have been able to create highly trained and professional technicians, <br> programmers ,soft ware engineers and also economics .some working in big companies with huge reputations kike amazone, safaricom</p>
+        <h1 class="text-4xl font-bold">Our Success </h1>
+        <p class="mt-20">We have been able to create highly trained and professional technicians, <br> programmers ,soft ware engineers and also economics .some working in big companies with huge reputations kike amazone, safaricom</p>
       </div>
-      <div class="flex justify-evenly mt-15">
+      <div class="flex justify-evenly mt-20">
         <span class="text-center ">
           <h1 class="text-4xl text-cyan-600">15K+</h1>
           <p>Students</p>
@@ -35,7 +35,7 @@ import { Component } from '@angular/core';
 
     <div class="mt-10">
       <div class="text-center ">
-        <h1 class="text-blue-600 font-bold text-xl">All-In-One<h1 class="text-cyan-500">Cloud Software</h1></h1>
+        <h1 class="text-blue-600 font-bold text-2xl">All-In-One<h1 class="text-cyan-500">Cloud Software</h1></h1>
         <p>SkiBoost is one powerful online software suite that combines all the tools needed to run a successful school or office.</p>
       </div>
       <div class="flex justify-evenly mt-[150px] ">
@@ -46,9 +46,9 @@ import { Component } from '@angular/core';
            <h1 class="font-bold mt-10 ">Online Billing, Invoicing, & Contracts</h1>
            <p>Simple and secure control of your organization’s financial and legal transactions. Send customized invoices and contracts</p>
         </div>
-        <div class="w-[250px] border shadow-2xl rounded-xl text-center">
+        <div class="w-[250px] border shadow-2xl rounded-xl text-center h-[300px]">
           <div class="flex justify-center">
-           <img src="assets/images/4038766.jpg" alt="paper" class="border rounded-full h-[50px] mt-[-20px] flex justify-center">
+           <img src="assets/images/book.jpg" alt="paper" class="border rounded-full h-[50px] mt-[-20px] flex justify-center">
            </div>
            <h1 class="font-bold mt-10 ">Easy Scheduling & Attendance Tracking</h1>
            <p>Schedule and reserve classrooms at one campus or multiple campuses. Keep detailed records of student attendance</p>
@@ -64,7 +64,7 @@ import { Component } from '@angular/core';
     </div>
     <div>
       <div class="text-center mt-20">
-        <h1 class="text-2xl mb-10">What is SkiBoost?</h1>
+        <h1 class="text-3xl font-bold mb-10">What is SkiBoost?</h1>
         <p>SkiBoost is a platform that allows educators to create online classes whereby they can <br> store the course materials online; manage assignments, quizzes and exams; monitor <br> due dates; grade results and provide students with feedback all in one place.</p>
       </div>
       <div class=" bg-aliceblue-100  h-[400px]   flex justify-center mt-10">
@@ -75,7 +75,7 @@ import { Component } from '@angular/core';
           <a href="https://www.freecodecamp.org/news/" >Learn More</a>
         </div>
         <div>
-          <img src="assets/images/classroom.jpg" alt=" classroom">
+          <img src="assets/images/classroom.jpg" alt=" classroom" class="border-4 border-t-cyan-400 rounded-xl">
         </div>
       </div>
     </div>

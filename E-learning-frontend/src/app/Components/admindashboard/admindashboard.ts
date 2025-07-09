@@ -302,7 +302,7 @@ export class AdminDashboardComponent implements OnInit {
 
   // Admin actions
   addNewCourse() {
-    this.router.navigate(['/courses']);
+    this.router.navigate(['/courses/create']);
   }
 
   manageUsers() {
@@ -315,6 +315,10 @@ export class AdminDashboardComponent implements OnInit {
 
   viewAnalytics() {
     this.setActiveTab('analytics');
+  }
+
+  addQuizzes() {
+    this.router.navigate(['/courses']);
   }
 
   // User management actions

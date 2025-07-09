@@ -17,13 +17,16 @@ import { StudentService } from '../../services/student.service';
         <h1 class="flex justify-center font-bold mt-4">11 hours left at this price</h1>
 
         <div class="flex justify-center mb-10">
-          <button class="bg-orange-600 text-white p-2 px-8 mt-6 border rounded-xl" routerLink="/enroll-course">
+          <button class="bg-orange-600 text-white p-2 px-8 mt-6 border rounded-xl" routerLink="/enroll-course" *ngIf="isStudent()">
             Enroll Now
           </button>
-          <button class="bg-orange-600 text-white p-2 px-8 mt-6 border rounded-xl" (click)="enrollInCourse()" [disabled]="enrolling">
+          <button class="bg-orange-600 text-white p-2 px-8 mt-6 border rounded-xl" (click)="enrollInCourse()" [disabled]="enrolling" *ngIf="isStudent()">
             {{ enrolling ? 'Enrolling...' : 'Enroll now' }}
           </button>
         </div>
+        <ng-container *ngIf="isStudent()">
+          <a [routerLink]="['/courses', courseId, 'quizzes']" class="quiz-btn">Take Quizzes for this Course</a>
+        </ng-container>
         <div *ngIf="enrollSuccess" class="text-green-600 text-center mb-4">Enrolled successfully! Check your dashboard.</div>
         <div *ngIf="enrollError" class="text-red-600 text-center mb-4">{{ enrollError }}</div>
 
@@ -57,7 +60,7 @@ import { StudentService } from '../../services/student.service';
 })
 export class ModuleComponent implements OnInit {
   modules: any[] = [];
-  private courseId: string = '';
+  courseId: string = '';
   enrolling = false;
   enrollSuccess = false;
   enrollError: string | null = null;
@@ -106,5 +109,14 @@ export class ModuleComponent implements OnInit {
         this.enrollError = err?.error?.message || 'Failed to enroll. Please try again.';
       }
     });
+  }
+
+  isStudent(): boolean {
+    const userData = localStorage.getItem('user_data');
+    if (userData) {
+      const user = JSON.parse(userData);
+      return user.role === 'STUDENT';
+    }
+    return false;
   }
 }

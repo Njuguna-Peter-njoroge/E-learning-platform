@@ -84,6 +84,8 @@ export class InstructorDashboardComponent implements OnInit {
   activeTab = signal('overview');
   courseFilter = '';
   studentFilter = '';
+  quizFilter = '';
+  quizProgress = signal<any[]>([]);
 
   // Math object for template access
   Math = Math;
@@ -106,7 +108,11 @@ export class InstructorDashboardComponent implements OnInit {
     // Load instructor profile - using stored user data for now
     const userData = localStorage.getItem('user_data');
     if (userData) {
-      this.instructor.set(JSON.parse(userData));
+      const user = JSON.parse(userData);
+      console.log('👨‍🏫 Instructor data:', user);
+      this.instructor.set(user);
+    } else {
+      console.log('❌ No user data found in localStorage');
     }
 
     // Load instructor courses
@@ -114,6 +120,9 @@ export class InstructorDashboardComponent implements OnInit {
 
     // Load student progress for instructor's courses
     this.loadStudentProgress();
+
+    // Load quiz progress
+    this.loadQuizProgress();
 
     this.isLoading.set(false);
   }
@@ -137,14 +146,33 @@ export class InstructorDashboardComponent implements OnInit {
     // Use the new instructor students progress endpoint
     this.studentService.getInstructorStudentsProgress().subscribe({
       next: (response: any) => {
+        console.log('📊 Student progress response:', response);
         const progress = response || [];
         this.studentProgress.set(progress);
+        console.log('📊 Set student progress:', progress);
       },
       error: (err: any) => {
-        console.error('Error loading student progress:', err);
+        console.error('❌ Error loading student progress:', err);
         // Fallback to empty array if endpoint fails
         this.studentProgress.set([]);
       }
+    });
+  }
+
+  loadQuizProgress() {
+    // Load quiz progress for all instructor's courses
+    const courses = this.courses();
+    const quizProgressPromises = courses.map(course => 
+      this.studentService.getInstructorQuizProgress(course.id).toPromise()
+    );
+
+    Promise.all(quizProgressPromises).then(results => {
+      const allQuizProgress = results.flat().filter(Boolean);
+      this.quizProgress.set(allQuizProgress);
+      console.log('📊 Quiz progress loaded:', allQuizProgress);
+    }).catch(err => {
+      console.error('❌ Error loading quiz progress:', err);
+      this.quizProgress.set([]);
     });
   }
 
@@ -190,6 +218,10 @@ export class InstructorDashboardComponent implements OnInit {
   archiveCourse(courseId: string) {
     // This would need backend implementation
     console.log('Archiving course:', courseId);
+  }
+
+  addQuiz() {
+    this.router.navigate(['/courses']);
   }
 
   // Student management
@@ -335,9 +367,51 @@ export class InstructorDashboardComponent implements OnInit {
 
   getCurrentDate(): string {
     return new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
+  }
+
+  // Quiz progress methods
+  getQuizCount(courseId: string): number {
+    // This would need to be implemented based on your quiz data structure
+    return 0; // Placeholder
+  }
+
+  getStudentQuizProgress(courseId: string): any[] {
+    return this.quizProgress().filter(p => p.courseId === courseId);
+  }
+
+  getQuizProgressForStudent(studentId: string): any[] {
+    return this.quizProgress().filter(p => p.student?.id === studentId);
+  }
+
+  getAverageQuizScore(courseId: string): number {
+    const courseQuizProgress = this.getStudentQuizProgress(courseId);
+    if (courseQuizProgress.length === 0) return 0;
+    
+    const totalScore = courseQuizProgress.reduce((sum, p) => sum + (p.averageScore || 0), 0);
+    return Math.round(totalScore / courseQuizProgress.length);
+  }
+
+  getQuizProgressStatus(score: number): string {
+    if (score >= 80) return 'Excellent';
+    if (score >= 60) return 'Good';
+    if (score >= 40) return 'Fair';
+    return 'Needs Improvement';
+  }
+
+  getQuizProgressColor(score: number): string {
+    if (score >= 80) return 'text-green-600 bg-green-100';
+    if (score >= 60) return 'text-blue-600 bg-blue-100';
+    if (score >= 40) return 'text-yellow-600 bg-yellow-100';
+    return 'text-red-600 bg-red-100';
+  }
+
+  sendReminder(studentId: string, courseId: string) {
+    console.log('Sending reminder to student:', studentId, 'for course:', courseId);
+    // This would typically send an email or notification
   }
 } 

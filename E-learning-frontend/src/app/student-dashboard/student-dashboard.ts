@@ -3,15 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { StudentService, Student, CourseProgress, StudentTask, Certificate } from '../services/student.service';
-import {Header} from '../component/header/header';
-import {Quiz, QuizQuestion, QuizTakeComponent} from '../pages/quiz-take/quiz-take';
+import { Quiz, QuizQuestion, FullQuiz } from '../services/quiz';
+import { QuizTakeComponent } from '../pages/quiz-take/quiz-take';
+import { QuizService } from '../services/quiz';
 
 @Component({
   selector: 'app-student-dashboard',
   templateUrl: './student-dashboard.html',
   styleUrls: ['./student-dashboard.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, Header, QuizTakeComponent]
+  imports: [CommonModule, FormsModule, HttpClientModule, QuizTakeComponent]
 })
 export class StudentDashboardComponent implements OnInit {
   // Student data
@@ -25,6 +26,7 @@ export class StudentDashboardComponent implements OnInit {
   certificates = signal<Certificate[]>([]);
   availableCourses = signal<any[]>([]);
   financeData = signal<{ totalPayable: number; totalPaid: number; others: number } | null>(null);
+  quizzes = signal<Quiz[]>([]);
 
   // UI state
   activeTab = signal('overview');
@@ -32,12 +34,13 @@ export class StudentDashboardComponent implements OnInit {
   selectedTask: StudentTask | null = null;
   viewingCourse: any = null;
   viewingLessons: any[] = [];
-  activeQuiz: Quiz | null = null;
+  activeQuiz: FullQuiz | null = null;
 
-  constructor(private studentService: StudentService) {}
+  constructor(private studentService: StudentService, private quizService: QuizService) {}
 
   ngOnInit() {
     this.loadDashboardData();
+    // Removed invalid signal subscription
   }
 
   loadDashboardData() {
@@ -59,6 +62,9 @@ export class StudentDashboardComponent implements OnInit {
     this.studentService.getStudentProgress().subscribe({
       next: (progress) => {
         this.courseProgress.set(progress);
+        if (progress && progress.length) {
+          this.fetchAllQuizzes(progress);
+        }
       },
       error: (err) => {
         console.error('Error loading course progress:', err);
@@ -103,6 +109,32 @@ export class StudentDashboardComponent implements OnInit {
     this.financeData.set({ totalPayable: 10000, totalPaid: 5000, others: 300 });
 
     this.isLoading.set(false);
+  }
+
+  fetchAllQuizzes(progressList: CourseProgress[]) {
+    const allQuizzes: Quiz[] = [];
+    let loaded = 0;
+    progressList.forEach((progress) => {
+      this.quizService.getQuizzesByCourse(progress.course.id).subscribe({
+        next: (quizzes) => {
+          allQuizzes.push(...quizzes);
+          loaded++;
+          if (loaded === progressList.length) {
+            this.quizzes.set(allQuizzes);
+          }
+        },
+        error: (err) => {
+          loaded++;
+          if (loaded === progressList.length) {
+            this.quizzes.set(allQuizzes);
+          }
+        }
+      });
+    });
+  }
+
+  startQuizFromDashboard(quiz: Quiz) {
+    this.beginQuiz(quiz);
   }
 
   // Tab navigation
@@ -188,7 +220,16 @@ export class StudentDashboardComponent implements OnInit {
 
   // Add this method to handle launching a quiz
   beginQuiz(quiz: Quiz) {
-    this.activeQuiz = quiz;
+    // Fetch the full quiz (with questions) before setting activeQuiz
+    this.quizService.getQuizById(quiz.id).subscribe({
+      next: (fullQuiz) => {
+        this.activeQuiz = fullQuiz;
+      },
+      error: (err) => {
+        console.error('Error loading quiz:', err);
+        this.error.set('Failed to load quiz');
+      }
+    });
   }
 
   // Handle quiz submission
@@ -196,6 +237,15 @@ export class StudentDashboardComponent implements OnInit {
     // TODO: Send answers to backend, update progress, show feedback
     this.activeQuiz = null;
     this.loadDashboardData();
+  }
+
+  isStudent(): boolean {
+    const userData = localStorage.getItem('user_data');
+    if (userData) {
+      const user = JSON.parse(userData);
+      return user.role === 'STUDENT';
+    }
+    return false;
   }
 
   // Utility methods

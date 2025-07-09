@@ -52,4 +52,8 @@ export class EnrollmentService {
   enrollByEmail(email: string, courseId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/dev/enroll-by-email`, { email, courseId });
   }
+
+  getEnrollmentsByCourse(courseId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}?courseId=${courseId}`);
+  }
 }

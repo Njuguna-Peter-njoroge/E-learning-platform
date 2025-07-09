@@ -16,6 +16,7 @@ import { AdminDashboardComponent } from './Components/admindashboard/admindashbo
 import { InstructorDashboardComponent } from './instructor-dashboard/instructor-dashboard';
 import { CourseCreateComponent } from './pages/course-create/course-create';
 import { QuizTakePageComponent } from './pages/quiz-take/quiz-take';
+import { QuizCreatePageComponent } from './pages/quiz-create/quiz-create-page';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: HOME },
@@ -29,6 +30,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'course-details/:id', component: CourseDetails },
   { path: 'courses/:id', component: CourseDetails },
+  { path: 'courses/:id/edit', component: CourseCreateComponent },
   { path: 'admindashboard', component: AdminDashboardComponent },
   { path: 'instructor-dashboard', component: InstructorDashboardComponent },
   { path: 'verify-email', component: VerifyEmailComponent },
@@ -38,5 +40,6 @@ export const routes: Routes = [
   { path: 'tregister', component: RegisterComponent },
   { path: 'enroll-course', component: EnrollmentComponent },
   { path: 'courses/:courseId/lessons', component: LessonViewComponent },
-  { path: 'courses/:courseId/quizzes', component: QuizTakePageComponent }
+  { path: 'courses/:courseId/quizzes', component: QuizTakePageComponent },
+  { path: 'courses/:courseId/quizzes/create', component: QuizCreatePageComponent }
 ];

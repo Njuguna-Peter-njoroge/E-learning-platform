@@ -39,6 +39,12 @@
           (click)="setActiveTab('analytics')">
           📈 Analytics
         </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeTab() === 'quizzes'"
+          (click)="setActiveTab('quizzes')">
+          📝 Quiz Progress
+        </button>
       </div>
     </div>
   </div>
@@ -121,6 +127,9 @@
         </button>
         <button class="action-btn warning" (click)="setActiveTab('analytics')">
           📈 View Analytics
+        </button>
+        <button class="action-btn success" (click)="addQuiz()">
+         📝 Add Quiz
         </button>
       </div>
     </div>
@@ -297,6 +306,85 @@
         <h4>Revenue Analytics</h4>
         <div class="chart-placeholder">
           <p>💰 Revenue tracking will be implemented here</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Progress Tab -->
+  <div *ngIf="activeTab() === 'quizzes' && !isLoading()" class="tab-content">
+    <div class="section-header">
+      <h3>Student Quiz Progress</h3>
+      <div class="search-filter">
+        <input
+          type="text"
+          placeholder="Search by course or student..."
+          [(ngModel)]="quizFilter"
+          class="search-input">
+      </div>
+    </div>
+
+    <div class="quiz-progress-container">
+      <div *ngFor="let course of getFilteredCourses()" class="course-quiz-section">
+        <div class="course-quiz-header">
+          <h4>{{ course.title }}</h4>
+          <span class="quiz-count">{{ getQuizCount(course.id) }} quizzes</span>
+        </div>
+
+        <div class="quiz-progress-grid">
+          <div *ngFor="let student of getStudentQuizProgress(course.id)" class="student-quiz-card">
+            <div class="student-info">
+              <div class="student-avatar">👤</div>
+              <div class="student-details">
+                <h5>{{ student.student.fullName }}</h5>
+                <p>{{ student.student.email }}</p>
+              </div>
+            </div>
+
+            <div class="quiz-progress-stats">
+              <div class="progress-stat">
+                <span class="stat-label">Completed</span>
+                <span class="stat-value">{{ student.completedQuizzes }}/{{ student.totalQuizzes }}</span>
+              </div>
+              <div class="progress-stat">
+                <span class="stat-label">Average Score</span>
+                <span class="stat-value">{{ Math.round(student.averageScore) }}%</span>
+              </div>
+            </div>
+
+            <div class="quiz-details">
+              <div *ngFor="let quiz of student.quizProgress" class="quiz-item">
+                <div class="quiz-info">
+                  <span class="quiz-title">{{ quiz.quizTitle }}</span>
+                  <span class="quiz-status" [class]="'status-' + quiz.status">
+                    {{ quiz.status === 'completed' ? '✅ Completed' : 
+                       quiz.status === 'in_progress' ? '⏳ In Progress' : '⏸️ Not Started' }}
+                  </span>
+                </div>
+                <div class="quiz-score" *ngIf="quiz.status === 'completed'">
+                  <span class="score">{{ Math.round(quiz.score) }}%</span>
+                  <span class="completion-date">{{ formatDate(quiz.completedAt) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="student-actions">
+              <button class="btn-secondary" (click)="viewStudentDetails(student.student.id)">
+                View Details
+              </button>
+              <button class="btn-primary" (click)="sendReminder(student.student.id, course.id)">
+                Send Reminder
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="getFilteredCourses().length === 0" class="no-quizzes">
+        <div class="empty-state">
+          <div class="empty-icon">📝</div>
+          <h4>No Quiz Data Available</h4>
+          <p>Quiz progress will appear here once students start taking quizzes.</p>
         </div>
       </div>
     </div>

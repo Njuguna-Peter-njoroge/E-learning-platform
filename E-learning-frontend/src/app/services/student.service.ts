@@ -135,6 +135,19 @@ export class StudentService {
 
   // Enroll in a course
   enrollInCourse(courseId: string): Observable<any> {
+    const userData = localStorage.getItem('user_data');
+    if (userData) {
+      const user = JSON.parse(userData);
+      if (user.role !== 'STUDENT') {
+        return new Observable(observer => {
+          observer.error({ error: { message: 'Only students can enroll in courses.' } });
+        });
+      }
+    } else {
+      return new Observable(observer => {
+        observer.error({ error: { message: 'User not logged in.' } });
+      });
+    }
     return this.http.post(`${this.apiUrl}/enrollments`, { courseId }, {
       headers: this.getHeaders()
     });
@@ -197,5 +210,9 @@ export class StudentService {
     });
     
     return this.http.get<any[]>(`${this.apiUrl}/progress/instructor/students-progress`, { headers });
+  }
+
+  getInstructorQuizProgress(courseId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/quizzes/course/${courseId}/instructor-progress`);
   }
 }

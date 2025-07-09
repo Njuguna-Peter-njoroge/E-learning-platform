@@ -66,11 +66,30 @@
           <div class="course-card" *ngFor="let course of availableCourses()">
             <div class="course-title">{{ course.title }}</div>
             <div class="course-description">{{ course.description }}</div>
-            <button class="enroll-btn" (click)="enrollInCourse(course.id)">Enroll</button>
+            <button class="enroll-btn" (click)="enrollInCourse(course.id)" *ngIf="isStudent()">Enroll</button>
           </div>
         </ng-container>
         <ng-template #noAvailable>
           <div class="no-courses">No available courses to enroll.</div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Quizzes Section -->
+    <div class="quizzes-section">
+      <div class="courses-header">
+        <h3>Quizzes</h3>
+      </div>
+      <div class="quizzes-list">
+        <ng-container *ngIf="quizzes()?.length; else noQuizzes">
+          <div class="quiz-card" *ngFor="let quiz of quizzes()">
+            <div class="quiz-title">{{ quiz.title }}</div>
+            <div class="quiz-description">{{ quiz.description }}</div>
+            <button class="start-quiz-btn" (click)="startQuizFromDashboard(quiz)">Start Quiz</button>
+          </div>
+        </ng-container>
+        <ng-template #noQuizzes>
+          <div class="no-quizzes">No quizzes available for your courses.</div>
         </ng-template>
       </div>
     </div>

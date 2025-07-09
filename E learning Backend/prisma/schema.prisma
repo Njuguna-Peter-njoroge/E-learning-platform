@@ -42,7 +42,7 @@ enum AccountStatus {
 
 model Course {
   id           String       @id @default(uuid())
-  iconImage    String      @default("course_image_icon.png")
+  iconImage    String       @default("course_image_icon.png")
   title        String
   description  String
   level        Difficulty
@@ -153,6 +153,7 @@ enum CertificateStatus {
 model Quiz {
   id          String        @id @default(uuid())
   title       String
+  description String
   courseId    String
   course      Course        @relation(fields: [courseId], references: [id])
   questions   Question[]
@@ -166,7 +167,7 @@ model Question {
   quizId  String
   quiz    Quiz         @relation(fields: [quizId], references: [id])
   options Option[]
-  answer  String
+  answers String[]
 }
 
 enum QuestionType {

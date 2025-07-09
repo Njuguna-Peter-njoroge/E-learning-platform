@@ -21,10 +21,29 @@ export interface QuizQuestion {
   questionText: string;
   type: 'multiple-choice' | 'short-answer';
   choices?: string[];
+  answers?: string[]; // For MCQ, multiple correct answers
+  correctAnswer?: string; // For short-answer
 }
 
 export interface FullQuiz extends Quiz {
   questions: QuizQuestion[];
+}
+
+export interface QuizSubmission {
+  quizId: string;
+  answers: { [questionId: string]: string | string[] };
+  timeSpent: number;
+  completedAt: string;
+}
+
+export interface QuizProgress {
+  quizId: string;
+  userId: string;
+  status: 'not_started' | 'in_progress' | 'completed';
+  progress: number;
+  timeSpent?: number;
+  completedAt?: string;
+  score?: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -55,5 +74,47 @@ export class QuizService {
       Authorization: `Bearer ${token}`
     });
     return this.http.post(`${this.apiUrl}/${quizId}/submit`, answers, { headers });
+  }
+
+  // New methods for quiz completion tracking
+  submitQuizCompletion(submission: QuizSubmission): Observable<any> {
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    return this.http.post(`${this.apiUrl}/${submission.quizId}/complete`, submission, { headers });
+  }
+
+  getQuizProgress(quizId: string): Observable<QuizProgress> {
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    return this.http.get<QuizProgress>(`${this.apiUrl}/${quizId}/progress`, { headers });
+  }
+
+  getStudentQuizProgress(courseId: string): Observable<QuizProgress[]> {
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    return this.http.get<QuizProgress[]>(`${this.apiUrl}/course/${courseId}/progress`, { headers });
+  }
+
+  // For instructors to view student quiz progress
+  getInstructorQuizProgress(courseId: string): Observable<any[]> {
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    return this.http.get<any[]>(`${this.apiUrl}/course/${courseId}/instructor-progress`, { headers });
+  }
+
+  saveQuizProgress(quizId: string, progress: Partial<QuizProgress>): Observable<any> {
+    const token = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    return this.http.patch(`${this.apiUrl}/${quizId}/progress`, progress, { headers });
   }
 } 

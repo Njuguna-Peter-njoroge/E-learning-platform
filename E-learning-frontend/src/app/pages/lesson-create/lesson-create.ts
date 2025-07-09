@@ -27,7 +27,7 @@ import { LessonService, CreateLessonDto } from '../../services/lesson';
   `
 })
 export class LessonCreateComponent {
-  @Input() courseId!: string;
+  @Input() moduleId!: string;
   @Output() lessonCreated = new EventEmitter<void>();
   lesson: Partial<CreateLessonDto> = { title: '', content: '', order: 1 };
   isLoading = false;
@@ -36,10 +36,10 @@ export class LessonCreateComponent {
   constructor(private lessonService: LessonService) {}
 
   addLesson() {
-    if (!this.courseId) return;
+    if (!this.moduleId) return;
     this.isLoading = true;
     this.error = null;
-    this.lessonService.create({ ...this.lesson, courseId: this.courseId } as CreateLessonDto).subscribe({
+    this.lessonService.create({ ...this.lesson, moduleId: this.moduleId } as CreateLessonDto).subscribe({
       next: () => {
         this.isLoading = false;
         this.lesson = { title: '', content: '', order: 1 };
